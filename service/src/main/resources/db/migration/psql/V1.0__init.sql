@@ -40,7 +40,7 @@ create table campaign
     delivery_fee_decimal_discount decimal(3,2) constraint campaign_delivery_fee_decimal_discount_between_0_and_1 check (delivery_fee_decimal_discount between 0.00 and 1.00),
     start_datetime timestamp not null,
     end_datetime timestamp not null constraint campaign_start_datetime_lower_than_end_datetime check (
-        start_datetime > end_datetime
+        start_datetime < end_datetime
     )
 );
 
@@ -91,6 +91,26 @@ create table distributor
     company_document text
 );
 
+create table distributor_address
+(
+    distributor_id bigint not null constraint distributor_address_distributor_fkey references distributor on delete cascade,
+    address_id bigint not null constraint distributor_branch_address_address_fkey references address on delete cascade,
+    constraint distributor_address_pkey primary key(distributor_id, address_id)
+);
+
+create table distributor_contact
+(
+    id bigserial not null constraint distributor_contact_pkey primary key,
+    active boolean not null,
+    changed_date_time timestamp not null,
+    created_date_time timestamp not null,
+    version bigint,
+
+    distributor_id bigint not null constraint distributor_contact_distributor_fkey references distributor on delete cascade,
+    contact_type text not null,
+    contact_value text not null
+);
+
 create table distributor_branch
 (
     id bigserial not null constraint distributor_branch_pkey primary key,
@@ -119,7 +139,7 @@ create table distributor_branch_contact
 create table distributor_branch_address
 (
     distributor_branch_id bigint not null constraint distributor_branch_address_distributor_branch_fkey references distributor_branch on delete cascade,
-    address_id bigint not null constraint distributor_branch_address_address_fkey references distributor_branch on delete cascade,
+    address_id bigint not null constraint distributor_branch_address_address_fkey references address on delete cascade,
     constraint distributor_branch_address_pkey primary key(distributor_branch_id, address_id)
 );
 
