@@ -11,7 +11,7 @@ data class Product(
         var name: String? = null
 ) : BaseEntity() {
 
-    @Column(name = "price")
+    @Column(name = "base_price")
     var price: BigDecimal = BigDecimal.ZERO
 
     @Column(name = "description")
@@ -19,6 +19,9 @@ data class Product(
 
     @Column(name = "item_code")
     var itemCode: String? = null
+
+    @Column(name = "picture_storage_key")
+    var pictureStorageKey: String? = null
 
     @ManyToOne
     @JoinColumn(name = "brand_id")
