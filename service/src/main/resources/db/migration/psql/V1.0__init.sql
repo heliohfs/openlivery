@@ -1,4 +1,4 @@
-create table brand
+create table if not exists brand
 (
     id bigserial not null constraint brand_pkey primary key,
     active boolean not null,
@@ -9,7 +9,7 @@ create table brand
     brand_name text
 );
 
-create table product
+create table if not exists product
 (
     id bigserial not null constraint product_pkey primary key,
     active boolean not null,
@@ -27,7 +27,25 @@ create table product
     constraint product_item_code_key unique (item_code)
 );
 
-create table campaign
+create table if not exists category
+(
+    id bigserial not null constraint category_pkey primary key,
+    active boolean not null,
+    changed_date_time timestamp not null,
+    created_date_time timestamp not null,
+    version bigint,
+
+    category_name text not null
+);
+
+create table if not exists product_category
+(
+    product_id bigint not null constraint product_category_product_fkey references product,
+    category_id bigint not null constraint product_category_category_fkey references category,
+    constraint product_category_pkey primary key(product_id, category_id)
+);
+
+create table if not exists campaign
 (
     id bigserial not null constraint campaign_pkey primary key,
     active boolean not null,
@@ -44,7 +62,7 @@ create table campaign
     )
 );
 
-create table campaign_product
+create table if not exists campaign_product
 (
     decimal_discount decimal(3,2) constraint campaign_product_decimal_discount_between_0_and_1 check (decimal_discount between 0.00 and 1.00),
     campaign_id bigint not null constraint campaign_product_campaign_fkey references campaign on delete cascade,
@@ -52,7 +70,7 @@ create table campaign_product
     constraint campaign_product_pkey primary key(campaign_id, product_id)
 );
 
-create table address
+create table if not exists address
 (
     id bigserial not null constraint address_pkey primary key,
     active boolean not null,
@@ -78,7 +96,7 @@ create table address
     longitude decimal(9,6)
 );
 
-create table distributor
+create table if not exists distributor
 (
     id bigserial not null constraint distributor_pkey primary key,
     active boolean not null,
@@ -91,14 +109,14 @@ create table distributor
     company_document text
 );
 
-create table distributor_address
+create table if not exists distributor_address
 (
     distributor_id bigint not null constraint distributor_address_distributor_fkey references distributor on delete cascade,
     address_id bigint not null constraint distributor_branch_address_address_fkey references address on delete cascade,
     constraint distributor_address_pkey primary key(distributor_id, address_id)
 );
 
-create table distributor_contact
+create table if not exists distributor_contact
 (
     id bigserial not null constraint distributor_contact_pkey primary key,
     active boolean not null,
@@ -111,7 +129,7 @@ create table distributor_contact
     contact_value text not null
 );
 
-create table distributor_branch
+create table if not exists distributor_branch
 (
     id bigserial not null constraint distributor_branch_pkey primary key,
     active boolean not null,
@@ -123,7 +141,7 @@ create table distributor_branch
     branch_name text
 );
 
-create table distributor_branch_contact
+create table if not exists distributor_branch_contact
 (
     id bigserial not null constraint distributor_branch_contact_pkey primary key,
     active boolean not null,
@@ -136,7 +154,7 @@ create table distributor_branch_contact
     contact_value text not null
 );
 
-create table distributor_branch_address
+create table if not exists distributor_branch_address
 (
     distributor_branch_id bigint not null constraint distributor_branch_address_distributor_branch_fkey references distributor_branch on delete cascade,
     address_id bigint not null constraint distributor_branch_address_address_fkey references address on delete cascade,
