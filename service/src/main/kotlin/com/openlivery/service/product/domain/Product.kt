@@ -1,18 +1,19 @@
-package com.openlivery.service.product.entity
+package com.openlivery.service.product.domain
 
 import com.openlivery.service.common.entities.BaseEntity
 import java.math.BigDecimal
 import javax.persistence.*
+import kotlin.jvm.Transient
 
 @Entity(name = "Product")
 @Table(name = "product")
-data class Product(
-        @Column(name = "product_name")
-        var name: String? = null
-) : BaseEntity() {
+class Product : BaseEntity() {
+
+    @Column(name = "product_name")
+    var name: String? = null
 
     @Column(name = "base_price")
-    var price: BigDecimal = BigDecimal.ZERO
+    var price: BigDecimal? = null
 
     @Column(name = "description")
     var description: String? = null
@@ -26,5 +27,23 @@ data class Product(
     @ManyToOne
     @JoinColumn(name = "brand_id")
     var brand: Brand? = null
+
+    @ManyToMany
+    @JoinTable(
+            name = "product_category",
+            joinColumns = [JoinColumn(name = "product_id")],
+            inverseJoinColumns = [JoinColumn(name = "category_id")]
+    )
+    var categories: MutableList<Category> = mutableListOf()
+
+    @Transient
+    var pictureUrl: String? = null
+
+    @PostLoad
+    @PostUpdate
+    @PostPersist
+    fun postLoad() {
+        pictureUrl = pictureStorageKey
+    }
 
 }

@@ -1,4 +1,4 @@
-package com.openlivery.service.product.entity
+package com.openlivery.service.product.domain
 
 import com.openlivery.service.common.entities.BaseEntity
 import javax.persistence.*
