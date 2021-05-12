@@ -6,7 +6,7 @@ import java.time.ZoneOffset
 import javax.persistence.*
 
 @MappedSuperclass
-abstract class BaseEntity() : Serializable {
+abstract class BaseEntity : Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
