@@ -13,7 +13,7 @@ create table if not exists brand
     created_date_time timestamp not null default current_timestamp,
     version bigint default 1,
 
-    brand_name text
+    brand_name text not null
 );
 
 create table if not exists product
@@ -47,8 +47,8 @@ create table if not exists category
 
 create table if not exists product_category
 (
-    product_id bigint not null constraint product_category_product_fkey references product,
-    category_id bigint not null constraint product_category_category_fkey references category,
+    product_id bigint not null constraint product_category_product_fkey references product on delete cascade,
+    category_id bigint not null constraint product_category_category_fkey references category on delete cascade,
     constraint product_category_pkey primary key(product_id, category_id)
 );
 
@@ -240,7 +240,7 @@ create table if not exists "order"
 create table if not exists order_product
 (
     order_id bigint not null constraint order_products_order_fkey references "order",
-    product_id bigint not null constraint order_products_product_fkey references product,
+    product_id bigint not null constraint order_products_product_fkey references product on delete cascade,
     amount int not null constraint order_product_positive_non_zero_amount check(amount > 0),
     constraint order_product_pkey primary key(order_id, product_id)
 );
