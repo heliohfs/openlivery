@@ -9,8 +9,9 @@ create or replace view product_catalog as
             on cp.id = cp_prod.campaign_id
         right join product prod
             on prod.id = cp_prod.product_id and
-            cp.active = true and
-            now() at time zone 'utc' between start_datetime and end_datetime
+                cp.active = true and
+                cp.omit <> true and
+                current_timestamp at time zone 'utc' between start_datetime and end_datetime
     where prod.active is true
     group by prod.id;
 
