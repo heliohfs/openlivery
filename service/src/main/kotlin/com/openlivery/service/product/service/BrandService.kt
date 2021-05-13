@@ -10,8 +10,20 @@ class BrandService(
         val repository: BrandRepository
 ) {
 
+    fun findAll(): List<Brand> {
+        return repository.findAll()
+    }
+
     fun findById(id: Long): Optional<Brand> {
         return repository.findById(id)
+    }
+
+    fun save(brand: Brand): Brand {
+        return repository.save(brand)
+    }
+
+    fun deleteById(id: Long) {
+        repository.deleteById(id)
     }
 
 }

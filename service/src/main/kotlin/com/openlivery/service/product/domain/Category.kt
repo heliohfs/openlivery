@@ -1,14 +1,13 @@
 package com.openlivery.service.product.domain
 
 import com.openlivery.service.common.entities.BaseEntity
-import javax.persistence.Column
-import javax.persistence.JoinColumn
-import javax.persistence.JoinTable
-import javax.persistence.ManyToMany
+import javax.persistence.*
 
+@Entity(name = "Category")
+@Table(name = "category")
 class Category(
         @Column(name = "category_name")
-        val categoryName: String
+        var categoryName: String
 ) : BaseEntity() {
 
     @ManyToMany
@@ -17,6 +16,6 @@ class Category(
             joinColumns = [JoinColumn(name = "category_id")],
             inverseJoinColumns = [JoinColumn(name = "product_id")]
     )
-    var products: MutableList<Product> = mutableListOf()
+    var products: MutableList<Product>? = mutableListOf()
 
 }

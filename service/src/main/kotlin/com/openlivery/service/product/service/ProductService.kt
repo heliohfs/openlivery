@@ -18,7 +18,16 @@ class ProductService(
         return repository.findAll()
     }
 
+    fun findAllByIdIn(ids: List<Long>): List<Product> {
+        return repository.findAllByIdIn(ids)
+    }
+
     fun save(product: Product): Product {
         return repository.save(product)
     }
+
+    fun deleteById(id: Long) {
+        repository.deleteById(id)
+    }
+
 }

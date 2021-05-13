@@ -1,0 +1,25 @@
+scalar DateTime
+scalar SortCriterion
+scalar BigDecimal
+
+type Brand {
+    id: ID!
+    name: String!
+    products: [Product]!
+}
+
+type Category {
+    categoryName: String!
+    products: [Product]!
+}
+
+type Product {
+    id: ID!
+    name: String!
+    price: BigDecimal!
+    description: String
+    itemCode: String
+    pictureUrl: String
+    brand: Brand
+    categories: [Category]!
+}

@@ -3,17 +3,16 @@ package com.openlivery.service.product.domain
 import com.openlivery.service.common.entities.BaseEntity
 import java.math.BigDecimal
 import javax.persistence.*
-import kotlin.jvm.Transient
 
 @Entity(name = "Product")
 @Table(name = "product")
-class Product : BaseEntity() {
+data class Product(
+        @Column(name = "product_name")
+        var name: String,
 
-    @Column(name = "product_name")
-    var name: String? = null
-
-    @Column(name = "base_price")
-    var price: BigDecimal? = null
+        @Column(name = "base_price")
+        var price: BigDecimal
+) : BaseEntity() {
 
     @Column(name = "description")
     var description: String? = null
@@ -45,5 +44,4 @@ class Product : BaseEntity() {
     fun postLoad() {
         pictureUrl = pictureStorageKey
     }
-
 }

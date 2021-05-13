@@ -3,8 +3,6 @@ package com.openlivery.service.product.resolver
 import com.coxautodev.graphql.tools.GraphQLQueryResolver
 import com.openlivery.service.product.domain.Product
 import com.openlivery.service.product.service.ProductService
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Component
 
 @Component
@@ -13,7 +11,12 @@ class ProductQueryResolver(
 ) : GraphQLQueryResolver {
 
     fun products(): List<Product> {
-        return service.findAll().toList()
+        return service.findAll()
+    }
+
+    fun productById(id: Long): Product {
+        return service.findById(id)
+                .orElseThrow { error("Product not found") }
     }
 
 }

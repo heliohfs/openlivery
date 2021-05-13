@@ -7,13 +7,13 @@ import javax.persistence.*
 @Table(name = "brand")
 data class Brand(
         @Column(name = "brand_name")
-        var name: String? = null
+        var name: String
 ) : BaseEntity() {
 
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "brand"
     )
-    var products: MutableList<Product> = mutableListOf()
+    var products: MutableList<Product>? = mutableListOf()
 
 }

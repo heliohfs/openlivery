@@ -1,0 +1,12 @@
+type Query {
+
+    products: [Product]
+    productById(id: ID!): Product
+
+    categories: [Category]
+    categoryById(id: ID!): Category
+
+    brands: [Brand]
+    brandById(id: ID!): Brand
+
+}

@@ -1,0 +1,19 @@
+input ProductInput {
+    id: ID
+    name: String!
+    price: BigDecimal!
+    description: String
+    itemCode: String
+    categoriesIds: [ID],
+    brandId: ID
+}
+
+input BrandInput {
+    name: String!
+    productsIds: [ID]
+}
+
+input CategoryInput {
+    categoryName: String!
+    productsIds: [ID]
+}
