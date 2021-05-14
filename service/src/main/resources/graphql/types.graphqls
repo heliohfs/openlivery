@@ -23,3 +23,22 @@ type Product {
     brand: Brand
     categories: [Category]!
 }
+
+type CatalogItemCategory {
+    id: ID!
+    categoryName: String!
+}
+
+type CatalogItem {
+    id: ID!
+    name: String!
+    basePrice: BigDecimal!
+    finalPrice: BigDecimal
+    pictureStorageKey: String
+    itemCode: String
+    brandId: ID
+    description: String
+    decimalDiscount: BigDecimal
+    deliveryFeeDecimalDiscount: BigDecimal
+    categories: [CatalogItemCategory]!
+}

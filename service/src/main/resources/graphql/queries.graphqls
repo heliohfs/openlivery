@@ -9,4 +9,7 @@ type Query {
     brands: [Brand]
     brandById(id: ID!): Brand
 
+    catalog: [CatalogItem]
+    catalogItemById(productId: ID!): CatalogItem
+    catalogByCategoryName(categoryName: String!): [CatalogItem]
 }
