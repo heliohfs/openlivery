@@ -83,24 +83,6 @@ create table if not exists campaign_product
     constraint campaign_product_pkey primary key(campaign_id, product_id)
 );
 
-create table if not exists address
-(
-    id bigserial not null constraint address_pkey primary key,
-    active boolean not null default true,
-    changed_date_time timestamp not null default current_timestamp,
-    created_date_time timestamp not null default current_timestamp,
-    version bigint default 1,
-
-    latitude decimal(8,6),
-    longitude decimal(9,6),
-    street_name text,
-    street_number numeric,
-    additional_info text,
-    city_name text,
-    governing_district text,
-    country text
-);
-
 create table if not exists distributor
 (
     id bigserial not null constraint distributor_pkey primary key,
@@ -118,9 +100,21 @@ create table if not exists distributor
 
 create table if not exists distributor_address
 (
-    distributor_id bigint not null constraint distributor_address_distributor_fkey references distributor on delete cascade,
-    address_id bigint not null constraint distributor_branch_address_address_fkey references address on delete cascade,
-    constraint distributor_address_pkey primary key(distributor_id, address_id)
+    id bigserial not null constraint distributor_address_pkey primary key,
+    active boolean not null default true,
+    changed_date_time timestamp not null default current_timestamp,
+    created_date_time timestamp not null default current_timestamp,
+    version bigint default 1,
+
+    distributor_id bigint constraint distributor_address_distributor_fkey references distributor on delete cascade,
+    latitude decimal(8,6),
+    longitude decimal(9,6),
+    street_name text,
+    street_number numeric,
+    additional_info text,
+    city_name text,
+    governing_district text,
+    country text
 );
 
 create table if not exists distributor_contact
@@ -134,38 +128,6 @@ create table if not exists distributor_contact
     distributor_id bigint not null constraint distributor_contact_distributor_fkey references distributor on delete cascade,
     contact_type text not null,
     contact_value text not null
-);
-
-create table if not exists distributor_branch
-(
-    id bigserial not null constraint distributor_branch_pkey primary key,
-    active boolean not null default true,
-    changed_date_time timestamp not null default current_timestamp,
-    created_date_time timestamp not null default current_timestamp,
-    version bigint default 1,
-
-    distributor_id bigint not null constraint distributor_branch_distributor_fkey references distributor on delete cascade,
-    branch_name text
-);
-
-create table if not exists distributor_branch_contact
-(
-    id bigserial not null constraint distributor_branch_contact_pkey primary key,
-    active boolean not null default true,
-    changed_date_time timestamp not null default current_timestamp,
-    created_date_time timestamp not null default current_timestamp,
-    version bigint default 1,
-
-    distributor_branch_id bigint not null constraint distributor_branch_contact_distributor_branch_fkey references distributor_branch on delete cascade,
-    contact_type text not null,
-    contact_value text not null
-);
-
-create table if not exists distributor_branch_address
-(
-    distributor_branch_id bigint not null constraint distributor_branch_address_distributor_branch_fkey references distributor_branch on delete cascade,
-    address_id bigint not null constraint distributor_branch_address_address_fkey references address on delete cascade,
-    constraint distributor_branch_address_pkey primary key(distributor_branch_id, address_id)
 );
 
 create table if not exists customer
@@ -186,10 +148,24 @@ create table if not exists customer
 
 create table if not exists customer_address
 (
-    customer_id bigint not null constraint customer_address_customer_fkey references customer on delete cascade,
-    address_id bigint not null constraint customer_address_address_fkey references address on delete cascade,
-    constraint customer_address_pkey primary key(customer_id, address_id)
+    id bigserial not null constraint customer_address_pkey primary key,
+    active boolean not null default true,
+    changed_date_time timestamp not null default current_timestamp,
+    created_date_time timestamp not null default current_timestamp,
+    version bigint default 1,
+
+    customer_id bigint constraint customer_address_customer_fkey references customer on delete cascade,
+    latitude decimal(8,6),
+    longitude decimal(9,6),
+    street_name text,
+    street_number numeric,
+    additional_info text,
+    city_name text,
+    governing_district text,
+    country text
 );
+
+alter table customer add column if not exists default_address_id bigint constraint customer_default_address_address_fkey references customer_address on delete set null;
 
 create table if not exists "order"
 (
@@ -213,6 +189,7 @@ create table if not exists "order"
     ),
     notes text,
     customer_id bigint constraint order_customer_fkey references customer on delete set null,
+    customer_address_id bigint constraint order_customer_address_fkey references customer_address on delete set null,
     distributor_id bigint constraint order_distributor_fkey references distributor on delete set null,
     status text not null constraint order_status_one_of check (
         status in (
