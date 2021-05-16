@@ -211,6 +211,7 @@ create table if not exists "order"
     deliveryman_rating_reason text constraint order_deliveryman_rating_reason_depends_on_rating check (
         deliveryman_rating is not null
     ),
+    notes text,
     customer_id bigint constraint order_customer_fkey references customer on delete set null,
     distributor_id bigint constraint order_distributor_fkey references distributor on delete set null,
     status text not null constraint order_status_one_of check (
