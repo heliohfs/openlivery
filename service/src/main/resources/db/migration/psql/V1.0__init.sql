@@ -138,6 +138,7 @@ create table if not exists customer
     created_date_time timestamp not null default current_timestamp,
     version bigint default 1,
 
+    oauth_id text,
     ref_code text not null,
     complete_name text not null,
     email text not null,
