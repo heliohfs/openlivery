@@ -18,8 +18,10 @@ repositories {
 }
 
 dependencies {
+	implementation("me.paulschwarz:spring-dotenv:2.3.0")
 	implementation("com.graphql-java:graphql-spring-boot-starter:5.0.2")
 	implementation("com.graphql-java:graphql-java-tools:5.2.4")
+	implementation("org.springframework.boot:spring-boot-starter-redis:1.4.7.RELEASE")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.flywaydb:flyway-core")
@@ -30,6 +32,9 @@ dependencies {
 	runtimeOnly("org.postgresql:postgresql")
 	providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.security:spring-security-oauth2-resource-server")
+	implementation("org.springframework.security:spring-security-oauth2-jose")
 }
 
 tasks.withType<KotlinCompile> {
