@@ -1,0 +1,37 @@
+input ProductInput {
+    id: ID
+    name: String!
+    price: BigDecimal!
+    description: String
+    itemCode: String
+    categoriesIds: [ID],
+    brandId: ID
+}
+
+input CustomerAddressInput {
+    latitude: String
+    longitude: String
+    streetName: String
+    streetNumber: String
+    cityName: String
+    governingDistrict: String
+    country: String
+    additionalInfo: String
+}
+
+input CustomerRegistrationInput {
+    completeName: String!
+    email: String!
+    cellphone: String!
+    idNumber: String!
+}
+
+input BrandInput {
+    name: String!
+    productsIds: [ID]
+}
+
+input CategoryInput {
+    categoryName: String!
+    productsIds: [ID]
+}

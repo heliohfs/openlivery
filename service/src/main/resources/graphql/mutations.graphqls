@@ -8,4 +8,10 @@ type Mutation {
 
     upsertCategory(categoryInput: CategoryInput!): Category
     deleteCategoryById(id: ID!): Boolean
+
+    registerCustomer(registrationInput: CustomerRegistrationInput!): Customer
+    disableCustomer(customerId: ID!): Customer
+    upsertCustomerAddress(customerAddressInput: CustomerAddressInput!): [CustomerAddress]!
+    removeCustomerAddress(customerAddressId: ID!): Boolean
+
 }
