@@ -42,3 +42,24 @@ type CatalogItem {
     deliveryFeeDecimalDiscount: BigDecimal
     categories: [CatalogItemCategory]!
 }
+
+type CustomerAddress {
+    latitude: String!,
+    longitude: String!,
+    streetName: String!,
+    streetNumber: String!,
+    cityName: String!,
+    governingDistrict: String!,
+    country: String!,
+    additionalInfo: String,
+}
+
+type Customer {
+    completeName: String!,
+    email: String!,
+    cellphone: String!,
+    refCode: String!,
+    idNumber: String!,
+    balance: BigDecimal!,
+    addresses: [CustomerAddress]!
+}

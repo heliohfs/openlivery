@@ -10,7 +10,7 @@ type Mutation {
     deleteCategoryById(id: ID!): Boolean
 
     registerCustomer(registrationInput: CustomerRegistrationInput!): Customer
-    disableCustomer(customerId: ID!): Customer
+    disableCustomer(customerId: ID!): Boolean
     upsertCustomerAddress(customerAddressInput: CustomerAddressInput!): [CustomerAddress]!
     removeCustomerAddress(customerAddressId: ID!): Boolean
 
