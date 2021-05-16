@@ -24,7 +24,6 @@ class CustomerMutationResolver(
         return Customer(
                 oauthId = authenticationFacade.getAuthentication().name,
                 completeName = customerRegistrationInput.completeName,
-                email = customerRegistrationInput.email,
                 cellphone = customerRegistrationInput.cellphone,
                 refCode = "",
                 idNumber = customerRegistrationInput.idNumber

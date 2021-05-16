@@ -56,7 +56,6 @@ type CustomerAddress {
 
 type Customer {
     completeName: String!,
-    email: String!,
     cellphone: String!,
     refCode: String!,
     idNumber: String!,

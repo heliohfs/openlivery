@@ -11,8 +11,6 @@ data class Customer(
         var oauthId: String,
         @Column(name = "complete_name")
         var completeName: String,
-        @Column(name = "email")
-        var email: String,
         @Column(name = "cellphone")
         var cellphone: String,
         @Column(name = "ref_code")
