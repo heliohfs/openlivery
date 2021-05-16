@@ -13,9 +13,9 @@ abstract class BaseEntity : Serializable {
         private set
 
     @Column(name = "active")
-    var active: Boolean? = null
+    var active: Boolean? = true
 
-    @Column(name = "created_date_time")
+    @Column(name = "created_date_time", insertable = false, updatable = false)
     var createdDateTime: LocalDateTime? = null
         private set
 
@@ -25,8 +25,16 @@ abstract class BaseEntity : Serializable {
 
     @Version
     @Column(name = "version")
-    var version: Int? = null
+    var version: Int? = 1
         private set
 
     fun isNew(): Boolean = id == null
+
+    @PrePersist
+    @PreUpdate
+    fun onPersist() {
+        if (isNew())
+            createdDateTime = LocalDateTime.now(ZoneOffset.UTC)
+        changedDateTime = LocalDateTime.now(ZoneOffset.UTC)
+    }
 }
