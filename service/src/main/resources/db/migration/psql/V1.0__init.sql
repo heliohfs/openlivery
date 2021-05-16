@@ -42,7 +42,8 @@ create table if not exists category
     created_date_time timestamp not null default current_timestamp,
     version bigint default 1,
 
-    category_name text not null
+    category_name text not null,
+    constraint category_category_name_key unique(category_name)
 );
 
 create table if not exists product_category
@@ -90,23 +91,14 @@ create table if not exists address
     created_date_time timestamp not null default current_timestamp,
     version bigint default 1,
 
-    street_number numeric not null,
-    street_name text not null,
-    country text not null,
-    city_name text not null,
-    governing_district text not null,
-    postal_area text not null,
-    municipal_district text,
-    address_type text,
-    address_type_identifier text,
-    building_name text,
-    street_number_suffix text,
-    street_type text,
-    street_direction varchar(2),
-    local_municipality text,
-    additional_info text,
     latitude decimal(8,6),
-    longitude decimal(9,6)
+    longitude decimal(9,6),
+    street_name text,
+    street_number numeric,
+    additional_info text,
+    city_name text,
+    governing_district text,
+    country text
 );
 
 create table if not exists distributor
