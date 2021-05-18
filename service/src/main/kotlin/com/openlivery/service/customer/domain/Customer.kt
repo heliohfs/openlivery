@@ -7,15 +7,18 @@ import javax.persistence.*
 @Entity(name = "Customer")
 @Table(name = "customer")
 data class Customer(
-        @Column(name = "oauth_id")
-        var oauthId: String,
         @Column(name = "complete_name")
         var completeName: String,
+
         @Column(name = "phone_number")
         var phoneNumber: String,
-        @Column(name = "ref_code")
-        var refCode: String,
 ) : BaseEntity() {
+
+    @Column(name = "oauth_id")
+    var oauthId: String? = null
+
+    @Column(name = "ref_code")
+    var refCode: String? = null
 
     @Column(name = "email")
     var email: String? = null

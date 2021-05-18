@@ -22,11 +22,13 @@ class CustomerMutationResolver(
                 .ifPresent { throw error("User is already registered") }
 
         return Customer(
-                oauthId = authenticationFacade.getAuthentication().name,
                 completeName = customerRegistrationInput.completeName,
                 phoneNumber = customerRegistrationInput.phoneNumber,
-                refCode = "",
-        ).let { service.save(it) }
+        ).let {
+            it.oauthId = authenticationFacade.getAuthentication().name
+            it.refCode = "WIP"
+            service.save(it)
+        }
     }
 
     fun upsertCustomerAddress(customerAddressInput: CustomerAddressInput): List<CustomerAddress> {
