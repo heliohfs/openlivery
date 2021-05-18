@@ -17,6 +17,9 @@ data class Customer(
         var refCode: String,
 ) : BaseEntity() {
 
+    @Column(name = "email")
+    var email: String? = null
+
     @Column(name = "default_address_id")
     var defaultAddressId: Long? = null
 
