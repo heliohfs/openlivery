@@ -7,12 +7,13 @@ create table if not exists customer
     version bigint default 1,
 
     oauth_id text,
-    ref_code text not null,
+    ref_code text,
     complete_name text not null,
     phone_number text not null,
-    email text not null,
+    email text,
     balance decimal(15,6) constraint customer_balance_zero_or_greater check(balance >= 0) default 0.00,
-    constraint customer_email_key unique (email)
+    constraint customer_email_key unique (email),
+    constraint customer_ref_code_key unique (ref_code)
 );
 
 create table if not exists customer_address
