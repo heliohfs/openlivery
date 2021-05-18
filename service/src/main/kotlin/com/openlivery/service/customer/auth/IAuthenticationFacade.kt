@@ -1,4 +1,4 @@
-package com.openlivery.service.common.auth
+package com.openlivery.service.customer.auth
 
 import com.openlivery.service.customer.domain.Customer
 import org.springframework.security.core.Authentication

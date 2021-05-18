@@ -1,6 +1,6 @@
-package com.openlivery.service.common.auth.impl
+package com.openlivery.service.customer.auth.impl
 
-import com.openlivery.service.common.auth.IAuthenticationFacade
+import com.openlivery.service.customer.auth.IAuthenticationFacade
 import com.openlivery.service.customer.domain.Customer
 import com.openlivery.service.customer.service.CustomerService
 import org.springframework.security.core.Authentication

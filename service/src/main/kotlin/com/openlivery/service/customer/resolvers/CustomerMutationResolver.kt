@@ -1,7 +1,7 @@
 package com.openlivery.service.customer.resolvers
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver
-import com.openlivery.service.common.auth.impl.AuthenticationFacade
+import com.openlivery.service.customer.auth.impl.AuthenticationFacade
 import com.openlivery.service.customer.domain.Customer
 import com.openlivery.service.customer.domain.CustomerAddress
 import com.openlivery.service.customer.domain.CustomerAddressInput
