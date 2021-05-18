@@ -24,7 +24,7 @@ class CustomerMutationResolver(
         return Customer(
                 oauthId = authenticationFacade.getAuthentication().name,
                 completeName = customerRegistrationInput.completeName,
-                cellphone = customerRegistrationInput.cellphone,
+                phoneNumber = customerRegistrationInput.phoneNumber,
                 refCode = "",
         ).let { service.save(it) }
     }

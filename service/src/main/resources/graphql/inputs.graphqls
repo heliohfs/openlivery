@@ -21,7 +21,7 @@ input CustomerAddressInput {
 
 input CustomerRegistrationInput {
     completeName: String!
-    cellphone: String!
+    phoneNumber: String!
 }
 
 input BrandInput {

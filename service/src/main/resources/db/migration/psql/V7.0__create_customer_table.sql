@@ -9,7 +9,7 @@ create table if not exists customer
     oauth_id text,
     ref_code text not null,
     complete_name text not null,
-    cellphone text not null,
+    phone_number text not null,
     balance decimal(15,6) constraint customer_balance_zero_or_greater check(balance >= 0) default 0.00
 );
 

@@ -56,7 +56,7 @@ type CustomerAddress {
 
 type Customer {
     completeName: String!,
-    cellphone: String!,
+    phoneNumber: String!,
     refCode: String!,
     balance: BigDecimal!,
     addresses: [CustomerAddress]!
