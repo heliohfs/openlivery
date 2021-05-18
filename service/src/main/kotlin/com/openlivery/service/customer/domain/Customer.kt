@@ -15,8 +15,6 @@ data class Customer(
         var cellphone: String,
         @Column(name = "ref_code")
         var refCode: String,
-        @Column(name = "id_number")
-        var idNumber: String,
 ) : BaseEntity() {
 
     @Column(name = "default_address_id")

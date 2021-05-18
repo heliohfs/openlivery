@@ -26,7 +26,6 @@ class CustomerMutationResolver(
                 completeName = customerRegistrationInput.completeName,
                 cellphone = customerRegistrationInput.cellphone,
                 refCode = "",
-                idNumber = customerRegistrationInput.idNumber
         ).let { service.save(it) }
     }
 
