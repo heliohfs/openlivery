@@ -1,6 +1,7 @@
 package com.openlivery.service.customer.resolvers
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver
+import com.openlivery.service.customer.auth.IAuthenticationFacade
 import com.openlivery.service.customer.auth.impl.AuthenticationFacade
 import com.openlivery.service.customer.domain.Customer
 import com.openlivery.service.customer.domain.CustomerAddress
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component
 class CustomerMutationResolver(
         val service: CustomerService,
         val customerAddressService: CustomerAddressService,
-        val authenticationFacade: AuthenticationFacade
+        val authenticationFacade: IAuthenticationFacade
 ) : GraphQLMutationResolver {
 
     fun registerCustomer(customerRegistrationInput: CustomerRegistrationInput): Customer {
@@ -32,12 +33,19 @@ class CustomerMutationResolver(
     }
 
     fun upsertCustomerAddress(customerAddressInput: CustomerAddressInput): List<CustomerAddress> {
+        val customer = authenticationFacade.getCurrentCustomer()
+                .orElseThrow { error("User is not logged in") }
+
         val address = customerAddressInput.id?.let {
             customerAddressService.findById(it)
                     .orElseThrow { error("Address not found") }
         } ?: customerAddressInput.toCustomerAddress()
+                .also {
+                    it.customer = customer
+                }
 
         customerAddressService.save(address)
+
         return listOf()
     }
 

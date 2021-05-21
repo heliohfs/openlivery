@@ -29,7 +29,10 @@ data class Customer(
     @Column(name = "balance")
     val balance: BigDecimal? = BigDecimal.ZERO
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(
+            mappedBy = "customer",
+            fetch = FetchType.EAGER
+    )
     val addresses: MutableList<CustomerAddress> = mutableListOf()
 
 }

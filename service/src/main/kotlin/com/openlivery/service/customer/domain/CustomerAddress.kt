@@ -26,7 +26,7 @@ class CustomerAddress(
     @Column(name = "additional_info")
     var additionalInfo: String? = null
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "customer_id")
     lateinit var customer: Customer
 
