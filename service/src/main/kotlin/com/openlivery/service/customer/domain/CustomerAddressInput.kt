@@ -7,7 +7,7 @@ class CustomerAddressInput(
         var latitude: BigDecimal,
         var longitude: BigDecimal,
         var streetName: String,
-        var streetNumber: String,
+        var streetNumber: Int,
         var cityName: String,
         var governingDistrict: String,
         var country: String,

@@ -14,7 +14,7 @@ class CustomerAddress(
         @Column(name = "street_name")
         var streetName: String,
         @Column(name = "street_number")
-        var streetNumber: String,
+        var streetNumber: Int,
         @Column(name = "city_name")
         var cityName: String,
         @Column(name = "governing_district")
