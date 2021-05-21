@@ -12,7 +12,7 @@ input CustomerAddressInput {
     latitude: String
     longitude: String
     streetName: String
-    streetNumber: String
+    streetNumber: Int
     cityName: String
     governingDistrict: String
     country: String
