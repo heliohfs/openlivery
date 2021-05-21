@@ -7,16 +7,16 @@ create table if not exists "order"
     version bigint default 1,
 
     customer_rating int constraint order_customer_rating_depends_on_status check(
-        status = 'FINISHED'
+        customer_rating is null or status = 'FINISHED'
     ),
     deliveryman_rating int constraint order_deliveryman_rating_depends_on_status check(
-        status = 'FINISHED'
+        deliveryman_rating is null or status = 'FINISHED'
     ),
     customer_rating_reason text constraint order_customer_rating_reason_depends_on_rating check (
-        customer_rating is not null
+        customer_rating_reason is null or customer_rating is not null
     ),
     deliveryman_rating_reason text constraint order_deliveryman_rating_reason_depends_on_rating check (
-        deliveryman_rating is not null
+        deliveryman_rating_reason is null or deliveryman_rating is not null
     ),
     notes text,
     customer_id bigint constraint order_customer_fkey references customer on delete set null,
@@ -34,7 +34,7 @@ create table if not exists "order"
         )
     ) default 'PLACED',
     non_completion_reason text constraint order_non_completion_reason_depends_on_status check (
-        status in ('CANCELED', 'INCOMPLETE')
+        non_completion_reason is null or status in ('CANCELED', 'INCOMPLETE')
     )
 );
 
