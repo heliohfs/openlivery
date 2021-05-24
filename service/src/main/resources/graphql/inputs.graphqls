@@ -22,6 +22,14 @@ input CustomerAddressInput {
 input CustomerRegistrationInput {
     completeName: String!
     phoneNumber: String!
+    streetName: String!
+    streetNumber: Int!
+    cityName: String!
+    governingDistrict: String!
+    country: String!
+    additionalInfo: String
+    latitude: BigDecimal
+    longitude: BigDecimal
 }
 
 input BrandInput {
@@ -32,4 +40,28 @@ input BrandInput {
 input CategoryInput {
     categoryName: String!
     productsIds: [ID]
+}
+
+input OrderProductInput {
+    productId: ID!
+    amount: Int!
+}
+
+input PlaceOrderInput {
+    customerAddressId: ID!
+    notes: String
+    products: [OrderProductInput!]!
+}
+
+input AnonymousPlaceOrderInput {
+    completeName: String!
+    phoneNumber: String!
+    streetName: String!
+    streetNumber: Int!
+    cityName: String!
+    governingDistrict: String!
+    country: String!
+    products: [OrderProductInput!]!
+    additionalInfo: String
+    notes: String
 }

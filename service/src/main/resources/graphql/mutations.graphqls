@@ -1,17 +1,19 @@
 type Mutation {
 
+    # PRODUCT
     upsertProduct(productInput: ProductInput!): Product
     deleteProductById(id: ID!): Boolean
-
     upsertBrand(brandInput: BrandInput!): Brand
     deleteBrandById(id: ID!): Boolean
-
     upsertCategory(categoryInput: CategoryInput!): Category
     deleteCategoryById(id: ID!): Boolean
 
-    registerCustomer(registrationInput: CustomerRegistrationInput!): Customer
+    # CUSTOMER
+    registerCustomer(input: CustomerRegistrationInput!): Customer
     disableCustomer(customerId: ID!): Boolean
-    upsertCustomerAddress(customerAddressInput: CustomerAddressInput!): [CustomerAddress]!
-    removeCustomerAddress(customerAddressId: ID!): Boolean
+
+    # ORDER
+#    placeOrder(input: PlaceOrderInput!): Boolean
+#    placeAnonymousOrder(input: AnonymousPlaceOrderInput!): Boolean
 
 }

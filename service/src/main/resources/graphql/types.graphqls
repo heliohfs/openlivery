@@ -43,22 +43,31 @@ type CatalogItem {
     categories: [CatalogItemCategory]!
 }
 
-type CustomerAddress {
+type Address {
     id: ID!,
     latitude: String!,
     longitude: String!,
     streetName: String!,
-    streetNumber: String!,
+    streetNumber: Int!,
     cityName: String!,
     governingDistrict: String!,
     country: String!,
     additionalInfo: String,
 }
 
+type Authority {
+    id: ID!,
+    name: String!
+}
+
 type Customer {
-    completeName: String!,
-    phoneNumber: String!,
-    refCode: String!,
-    balance: BigDecimal!,
-    addresses: [CustomerAddress]!
+    id: ID!
+    oauthId: String!
+    completeName: String!
+    phoneNumber: String!
+    email: String
+    authorities: [Authority]
+    defaultAddress: Address
+    balance: BigDecimal
+    addresses: [Address]
 }
