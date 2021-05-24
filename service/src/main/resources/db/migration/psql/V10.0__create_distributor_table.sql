@@ -15,21 +15,9 @@ create table if not exists distributor
 
 create table if not exists distributor_address
 (
-    id bigserial not null constraint distributor_address_pkey primary key,
-    active boolean not null default true,
-    changed_date_time timestamp not null default current_timestamp,
-    created_date_time timestamp not null default current_timestamp,
-    version bigint default 1,
-
-    distributor_id bigint constraint distributor_address_distributor_fkey references distributor on delete cascade,
-    latitude decimal(8,6),
-    longitude decimal(9,6),
-    street_name text,
-    street_number numeric,
-    additional_info text,
-    city_name text,
-    governing_district text,
-    country text
+    distributor_id bigint not null constraint distributor_address_distributor_fkey references distributor,
+    address_id bigint not null constraint distributor_address_address_fkey references address,
+    constraint distributor_address_pkey primary key(distributor_id, address_id)
 );
 
 create table if not exists distributor_contact

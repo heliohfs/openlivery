@@ -1,4 +1,4 @@
-package com.openlivery.service.common.entities
+package com.openlivery.service.common.domain
 
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -9,24 +9,20 @@ import javax.persistence.*
 abstract class BaseEntity : Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
-        private set
+    open var id: Long? = null
 
     @Column(name = "active")
-    var active: Boolean? = true
+    open var active: Boolean? = true
 
     @Column(name = "created_date_time", insertable = false, updatable = false)
-    var createdDateTime: LocalDateTime? = null
-        private set
+    open var createdDateTime: LocalDateTime? = null
 
     @Column(name = "changed_date_time")
-    var changedDateTime: LocalDateTime? = null
-        private set
+    open var changedDateTime: LocalDateTime? = null
 
     @Version
     @Column(name = "version")
-    var version: Int? = 1
-        private set
+    open var version: Int? = 1
 
     fun isNew(): Boolean = id == null
 

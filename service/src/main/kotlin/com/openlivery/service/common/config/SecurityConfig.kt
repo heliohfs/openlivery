@@ -1,21 +1,25 @@
 package com.openlivery.service.common.config
 
+import com.openlivery.service.common.repository.UserRepository
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpMethod
+import org.springframework.context.annotation.Bean
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator
-import org.springframework.security.oauth2.core.OAuth2TokenValidator
 import org.springframework.security.oauth2.jwt.*
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter
 
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-class SecurityConfig : WebSecurityConfigurerAdapter() {
+class SecurityConfig(
+        var userRepository: UserRepository
+) : WebSecurityConfigurerAdapter() {
 
     @Value("\${auth0.audience}")
     private lateinit var audience: String
@@ -23,33 +27,37 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Value("\${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private lateinit var issuer: String
 
+    @Bean
+    fun passwordEncoder(): PasswordEncoder? {
+        return BCryptPasswordEncoder()
+    }
+
     override fun configure(http: HttpSecurity) {
-        http.authorizeRequests()
-                .mvcMatchers(HttpMethod.POST, "/graphql").permitAll() // GET requests don't need auth
-                .anyRequest()
-                .authenticated()
+        http
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/graphql").permitAll()
                 .and()
                 .oauth2ResourceServer()
                 .jwt()
                 .decoder(jwtDecoder())
-                .jwtAuthenticationConverter(jwtAuthenticationConverter());
+                .jwtAuthenticationConverter(jwtAuthenticationConverter())
     }
 
 
     fun jwtAuthenticationConverter(): JwtAuthenticationConverter {
-        val converter = JwtGrantedAuthoritiesConverter()
-        converter.setAuthoritiesClaimName("permissions")
-        converter.setAuthorityPrefix("")
-
-        val jwtConverter = JwtAuthenticationConverter();
-        jwtConverter.setJwtGrantedAuthoritiesConverter(converter)
-        return jwtConverter;
+        val converter = JwtAuthenticationConverter()
+        converter.setJwtGrantedAuthoritiesConverter { jwt: Jwt ->
+            userRepository.findAuthoritiesByOauthId(jwt.subject)
+                    .map { name -> SimpleGrantedAuthority(name) }
+        }
+        return converter
     }
 
     fun jwtDecoder(): JwtDecoder {
-        val withAudience: OAuth2TokenValidator<Jwt> = AudienceValidator(audience)
-        val withIssuer: OAuth2TokenValidator<Jwt> = JwtValidators.createDefaultWithIssuer(issuer)
-        val validator: OAuth2TokenValidator<Jwt> = DelegatingOAuth2TokenValidator(withAudience, withIssuer)
+        val withAudience = AudienceValidator(audience)
+        val withIssuer = JwtValidators.createDefaultWithIssuer(issuer)
+        val validator = DelegatingOAuth2TokenValidator(withAudience, withIssuer)
         val jwtDecoder = JwtDecoders.fromOidcIssuerLocation(issuer) as NimbusJwtDecoder
         jwtDecoder.setJwtValidator(validator)
         return jwtDecoder
