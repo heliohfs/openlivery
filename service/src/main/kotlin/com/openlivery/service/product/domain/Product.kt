@@ -1,6 +1,6 @@
 package com.openlivery.service.product.domain
 
-import com.openlivery.service.common.entities.BaseEntity
+import com.openlivery.service.common.domain.BaseEntity
 import java.math.BigDecimal
 import javax.persistence.*
 
