@@ -1,6 +1,6 @@
 package com.openlivery.service.catalog.domain
 
-import com.openlivery.service.common.entities.BaseEntity
+import com.openlivery.service.common.domain.BaseEntity
 import org.hibernate.annotations.Immutable
 import javax.persistence.*
 
