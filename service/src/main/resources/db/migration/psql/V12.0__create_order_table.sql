@@ -6,10 +6,10 @@ create table if not exists "order"
     created_date_time timestamp not null default current_timestamp,
     version bigint default 1,
 
-    customer_id bigint not null constraint order_customer_user_fkey references "user" on delete set null,
+    customer_data_id bigint constraint order_customer_data_fkey references customer_data on delete set null,
     deliveryman_id bigint constraint order_deliveryman_user_fkey references "user" on delete set null,
     distributor_id bigint constraint order_distributor_fkey references distributor on delete set null,
-    delivery_address_id bigint not null constraint order_delivery_address_fkey references address on delete set null,
+    delivery_address_id bigint constraint order_delivery_address_fkey references address on delete set null,
 
     customer_rating int constraint order_customer_rating_depends_on_status check(customer_rating is null or status = 'FINISHED'),
     deliveryman_rating int constraint order_deliveryman_rating_depends_on_status check(deliveryman_rating is null or status = 'FINISHED'),
@@ -35,9 +35,10 @@ create table if not exists "order"
     )
 );
 
+
 create table if not exists order_product
 (
-    order_id bigint not null constraint order_products_order_fkey references "order",
+    order_id bigint not null constraint order_products_order_fkey references "order" on delete cascade,
     product_id bigint not null constraint order_products_product_fkey references product on delete cascade,
     amount int not null constraint order_product_positive_non_zero_amount check(amount > 0),
     constraint order_product_pkey primary key(order_id, product_id)

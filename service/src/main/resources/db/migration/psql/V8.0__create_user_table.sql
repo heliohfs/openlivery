@@ -7,9 +7,6 @@ create table if not exists "user"
     version bigint default 1,
 
     oauth_id text not null,
-    complete_name text not null,
-    phone_number text not null,
-    email text,
 
     constraint user_oauth_id_key unique(oauth_id)
 );

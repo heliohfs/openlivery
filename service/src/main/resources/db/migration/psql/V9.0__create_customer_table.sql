@@ -5,6 +5,15 @@ create table if not exists customer
     balance decimal(15,6) default 0
 );
 
+create table if not exists customer_data
+(
+    id bigserial not null constraint customer_data_pkey primary key,
+    complete_name text not null,
+    phone_number text not null
+);
+
+alter table customer add column if not exists customer_data_id bigint not null constraint customer_customer_data_fkey references customer_data on delete cascade;
+
 create table if not exists customer_address
 (
     customer_id bigint not null constraint customer_address_user_fkey references customer on delete cascade,

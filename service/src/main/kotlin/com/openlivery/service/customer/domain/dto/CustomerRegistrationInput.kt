@@ -2,6 +2,7 @@ package com.openlivery.service.customer.domain.dto
 
 import com.openlivery.service.common.domain.Address
 import com.openlivery.service.customer.domain.Customer
+import com.openlivery.service.customer.domain.CustomerData
 import java.math.BigDecimal
 
 class CustomerRegistrationInput(
@@ -20,8 +21,10 @@ class CustomerRegistrationInput(
     fun toCustomer(oauthId: String): Customer {
         return Customer(
                 oauthId = oauthId,
-                completeName = this.completeName,
-                phoneNumber = this.phoneNumber
+                CustomerData(
+                        completeName = completeName,
+                        phoneNumber = phoneNumber
+                )
         ).also { customer ->
             customer.defaultAddress = Address(
                     streetName = this.streetName,

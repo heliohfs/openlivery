@@ -10,13 +10,11 @@ import javax.persistence.*
 @PrimaryKeyJoinColumn(name = "user_id")
 data class Customer(
         override val oauthId: String,
-        override var completeName: String,
-        override var phoneNumber: String
-) : User(
-        oauthId,
-        completeName,
-        phoneNumber
-) {
+
+        @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+        @JoinColumn(name = "customer_data_id", referencedColumnName = "id")
+        val data: CustomerData
+) : User(oauthId) {
 
     @Column(name = "balance")
     var balance: BigDecimal = BigDecimal.ZERO
@@ -25,7 +23,7 @@ data class Customer(
     @JoinColumn(name = "default_address_id")
     var defaultAddress: Address? = null
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.MERGE])
     @JoinTable(
             name = "customer_address",
             joinColumns = [JoinColumn(name = "customer_id")],

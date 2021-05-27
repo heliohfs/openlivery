@@ -62,11 +62,8 @@ type Authority {
 
 type Customer {
     id: ID!
-    oauthId: String!
     completeName: String!
     phoneNumber: String!
-    email: String
-    authorities: [Authority]
     defaultAddress: Address
     balance: BigDecimal
     addresses: [Address]
