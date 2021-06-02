@@ -1,7 +1,7 @@
 create or replace view product_catalog as
     select
         prod.*,
-        round(prod.base_price - (max(cp_prod.decimal_discount) * prod.base_price), 6) as final_price,
+        coalesce(round(prod.base_price - (max(cp_prod.decimal_discount) * prod.base_price), 6), prod.base_price) as final_price,
         max(cp_prod.decimal_discount) as decimal_discount,
         max(cp.delivery_fee_decimal_discount) as delivery_fee_decimal_discount
     from campaign cp
