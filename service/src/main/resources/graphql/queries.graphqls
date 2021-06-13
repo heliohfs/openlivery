@@ -1,18 +1,19 @@
 type Query {
 
+    # PRODUCT
     products: [Product]
     productById(id: ID!): Product
-
     categories: [Category]
     categoryById(id: ID!): Category
-
     brands: [Brand]
     brandById(id: ID!): Brand
-
     catalog: [CatalogItem]
     catalogItemById(productId: ID!): CatalogItem
     catalogByCategoryName(categoryName: String!): [CatalogItem]
 
+    # CUSTOMER
     customerProfile: Customer
 
+    # CART
+    cart: Cart
 }

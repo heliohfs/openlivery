@@ -13,8 +13,7 @@ class AuthenticationFacade(
 ) : IAuthenticationFacade {
     override val authentication: Authentication
         get() {
-            val auth = SecurityContextHolder.getContext().authentication
-            return auth
+            return SecurityContextHolder.getContext().authentication
         }
 
     override val user: User

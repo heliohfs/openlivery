@@ -3,7 +3,7 @@ package com.openlivery.service.order.resolver
 import com.coxautodev.graphql.tools.GraphQLMutationResolver
 import com.openlivery.service.common.auth.IAuthenticationFacade
 import com.openlivery.service.common.domain.Address
-import com.openlivery.service.order.domain.Order
+import com.openlivery.service.common.domain.Authority
 import com.openlivery.service.order.domain.OrderCustomer
 import com.openlivery.service.order.domain.OrderCustomerData
 import com.openlivery.service.order.domain.OrderProduct
@@ -25,7 +25,7 @@ class OrderMutationResolver(
         val auth: IAuthenticationFacade
 ) : GraphQLMutationResolver {
 
-    @PreAuthorize("hasAuthority('place_order')")
+    @PreAuthorize("hasAuthority('${Authority.PLACE_ORDER}')")
     @Transactional
     fun placeOrder(input: PlaceOrderInput): Boolean {
         val customer = auth.user as OrderCustomer

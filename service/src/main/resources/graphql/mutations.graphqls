@@ -16,4 +16,10 @@ type Mutation {
     placeOrder(input: PlaceOrderInput!): Boolean
     placeAnonymousOrder(input: PlaceAnonymousOrderInput!): Boolean
 
+    # CART
+    addProductToCart(productId: ID!, amount: Int): Cart
+    removeProductFromCart(productId: ID!): Cart
+    increaseProductAmount(productId: ID!): Cart
+    decreaseProductAmount(productId: ID!): Cart
+
 }

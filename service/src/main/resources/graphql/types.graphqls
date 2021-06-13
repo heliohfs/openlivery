@@ -68,3 +68,19 @@ type Customer {
     balance: BigDecimal
     addresses: [Address]
 }
+
+"""
+CART
+"""
+type CartCatalogProduct {
+    id: ID!
+    finalPrice: BigDecimal
+    basePrice: BigDecimal
+    pictureStorageKey: String
+    amount: Int
+}
+
+type Cart {
+    totalValue: BigDecimal
+    products: [CartCatalogProduct]!
+}

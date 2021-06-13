@@ -9,6 +9,10 @@ data class Authority(
         val name: String
 ) {
 
+    companion object {
+        const val PLACE_ORDER = "place_order"
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
