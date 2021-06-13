@@ -17,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
+import java.util.*
 
 @Component
 class OrderMutationResolver(
@@ -37,9 +38,12 @@ class OrderMutationResolver(
                     .run { orderService.save(this) }
         } ?: throw error("User has no default address")
 
-        val (orderProducts, totalValue) = order.id?.let { orderId ->
-            getOrderProductsAndTotalValue(orderId, input.products)
-        } ?: throw error("")
+        val (orderProducts, totalValue) = Optional.ofNullable(order.id)
+                .orElseThrow { error("Order was not created") }
+                .let { getOrderProductsAndTotalValue(it, input.products) }
+
+        if (totalValue.compareTo(input.displayedTotalValue) != 0)
+            throw error("Total value distinguishes from displayed total value.")
 
         order.orderProducts = orderProducts
         order.orderValue = totalValue
@@ -75,6 +79,9 @@ class OrderMutationResolver(
             getOrderProductsAndTotalValue(orderId, input.products)
         } ?: throw error("")
 
+        if (totalValue.compareTo(input.displayedTotalValue) != 0)
+            throw error("Total value distinguishes from displayed total value.")
+
         order.orderProducts = orderProducts
         order.orderValue = totalValue
 
@@ -91,6 +98,10 @@ class OrderMutationResolver(
             val orderProduct = OrderProduct(orderId = orderId, productId = it.productId, amount = it.amount)
             acc.left.add(orderProduct)
             val price = catalogProduct.finalPrice.multiply(BigDecimal(it.amount))
+
+            if(price.compareTo(it.displayedValue) != 0)
+                throw error("Product price times amount distinguishes from calculated value.")
+
             acc.right = acc.right.add(price)
             acc
         }

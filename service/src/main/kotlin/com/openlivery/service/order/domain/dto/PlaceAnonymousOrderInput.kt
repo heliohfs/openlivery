@@ -17,7 +17,8 @@ class PlaceAnonymousOrderInput(
         val country: String,
         val additionalInfo: String,
         val products: List<OrderProductInput>,
-        val notes: String? = null
+        val displayedTotalValue: BigDecimal,
+        private val notes: String? = null
 ) {
 
     fun toOrder(

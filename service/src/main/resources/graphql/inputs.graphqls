@@ -45,11 +45,14 @@ input CategoryInput {
 input OrderProductInput {
     productId: ID!
     amount: Int!
+    displayedValue: BigDecimal!
 }
+
 
 input PlaceOrderInput {
     notes: String
     products: [OrderProductInput!]!
+    displayedTotalValue: BigDecimal
 }
 
 input PlaceAnonymousOrderInput {
@@ -60,7 +63,8 @@ input PlaceAnonymousOrderInput {
     governingDistrict: String!
     country: String!
     streetNumber: Int!
-    products: [OrderProductInput!]!
     additionalInfo: String
     notes: String
+    products: [OrderProductInput!]!
+    displayedTotalValue: BigDecimal
 }
