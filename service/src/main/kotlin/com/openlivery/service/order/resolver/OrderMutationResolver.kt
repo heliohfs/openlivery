@@ -5,12 +5,12 @@ import com.openlivery.service.common.auth.IAuthenticationFacade
 import com.openlivery.service.common.domain.Address
 import com.openlivery.service.common.domain.Authority
 import com.openlivery.service.order.domain.OrderCustomer
-import com.openlivery.service.order.domain.OrderCustomerData
+import com.openlivery.service.order.domain.CustomerData
 import com.openlivery.service.order.domain.OrderProduct
 import com.openlivery.service.order.domain.dto.OrderProductInput
 import com.openlivery.service.order.domain.dto.PlaceAnonymousOrderInput
 import com.openlivery.service.order.domain.dto.PlaceOrderInput
-import com.openlivery.service.order.service.OrderCatalogProductService
+import com.openlivery.service.order.service.CatalogProductService
 import com.openlivery.service.order.service.OrderService
 import org.apache.commons.lang3.tuple.MutablePair
 import org.springframework.security.access.prepost.PreAuthorize
@@ -22,7 +22,7 @@ import java.util.*
 @Component
 class OrderMutationResolver(
         val orderService: OrderService,
-        val orderCatalogProductService: OrderCatalogProductService,
+        val catalogProductService: CatalogProductService,
         val auth: IAuthenticationFacade
 ) : GraphQLMutationResolver {
 
@@ -65,7 +65,7 @@ class OrderMutationResolver(
                 additionalInfo = input.additionalInfo
         )
 
-        val customerData = OrderCustomerData(
+        val customerData = CustomerData(
                 completeName = input.completeName,
                 phoneNumber = input.phoneNumber
         )
@@ -93,7 +93,7 @@ class OrderMutationResolver(
     private fun getOrderProductsAndTotalValue(orderId: Long, products: List<OrderProductInput>): MutablePair<MutableSet<OrderProduct>, BigDecimal> {
         return products.fold(MutablePair(mutableSetOf(), BigDecimal.ZERO))
         { acc, it ->
-            val catalogProduct = orderCatalogProductService.findById(it.productId)
+            val catalogProduct = catalogProductService.findById(it.productId)
                     .orElseThrow { error("Product not found") }
             val orderProduct = OrderProduct(orderId = orderId, productId = it.productId, amount = it.amount)
             acc.left.add(orderProduct)

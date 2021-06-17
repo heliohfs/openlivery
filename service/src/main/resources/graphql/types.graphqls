@@ -39,7 +39,6 @@ type CatalogItem {
     brandId: ID
     description: String
     decimalDiscount: BigDecimal
-    deliveryFeeDecimalDiscount: BigDecimal
     categories: [CatalogItemCategory]!
 }
 
@@ -72,15 +71,18 @@ type Customer {
 """
 CART
 """
-type CartCatalogProduct {
+type CartProduct {
     id: ID!
-    finalPrice: BigDecimal
-    basePrice: BigDecimal
+    finalPrice: BigDecimal!
+    basePrice: BigDecimal!
     pictureStorageKey: String
-    amount: Int
+    amount: Int!
+    discountApplied: Boolean!
 }
 
 type Cart {
-    totalValue: BigDecimal
-    products: [CartCatalogProduct]!
+    totalValue: BigDecimal!
+    deliveryFee: BigDecimal!
+    couponApplied: String
+    products: [CartProduct]!
 }

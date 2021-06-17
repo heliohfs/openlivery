@@ -1,6 +1,8 @@
 type Mutation {
 
-    # PRODUCT
+    """
+    PRODUCT
+    """
     upsertProduct(productInput: ProductInput!): Product
     deleteProductById(id: ID!): Boolean
     upsertBrand(brandInput: BrandInput!): Brand
@@ -8,18 +10,25 @@ type Mutation {
     upsertCategory(categoryInput: CategoryInput!): Category
     deleteCategoryById(id: ID!): Boolean
 
-    # CUSTOMER
+    """
+    CUSTOMER
+    """
     registerCustomer(input: CustomerRegistrationInput!): Boolean
     disableCustomer(customerId: ID!): Boolean
 
-    # ORDER
+    """
+    ORDER
+    """
     placeOrder(input: PlaceOrderInput!): Boolean
     placeAnonymousOrder(input: PlaceAnonymousOrderInput!): Boolean
 
-    # CART
-    addProductToCart(productId: ID!, amount: Int): Cart
-    removeProductFromCart(productId: ID!): Cart
-    increaseProductAmount(productId: ID!): Cart
-    decreaseProductAmount(productId: ID!): Cart
+    """
+    CART
+    """
+    addProductToCart(productId: ID!, amount: Int): Boolean
+    removeProductFromCart(productId: ID!): Boolean
+    increaseProductAmount(productId: ID!): Boolean
+    decreaseProductAmount(productId: ID!): Boolean
+    applyCoupon(couponCode: String): Boolean
 
 }

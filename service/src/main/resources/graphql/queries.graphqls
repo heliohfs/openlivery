@@ -1,6 +1,8 @@
 type Query {
 
-    # PRODUCT
+    """
+    PRODUCT
+    """
     products: [Product]
     productById(id: ID!): Product
     categories: [Category]
@@ -11,9 +13,13 @@ type Query {
     catalogItemById(productId: ID!): CatalogItem
     catalogByCategoryName(categoryName: String!): [CatalogItem]
 
-    # CUSTOMER
+    """
+    CUSTOMER
+    """
     customerProfile: Customer
 
-    # CART
+    """
+    CART
+    """
     cart: Cart
 }

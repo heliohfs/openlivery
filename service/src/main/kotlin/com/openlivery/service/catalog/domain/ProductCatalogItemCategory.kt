@@ -4,7 +4,7 @@ import com.openlivery.service.common.domain.BaseEntity
 import org.hibernate.annotations.Immutable
 import javax.persistence.*
 
-@Entity(name = "ProductCatalogItemCategory")
+@Entity(name = "CatalogProductCategory")
 @Table(name = "category")
 @Immutable
 class ProductCatalogItemCategory(

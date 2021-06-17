@@ -13,7 +13,7 @@ data class OrderCustomer(
 
         @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
         @JoinColumn(name = "customer_data_id", referencedColumnName = "id")
-        val data: OrderCustomerData
+        val data: CustomerData
 ) : User(oauthId) {
 
     @Column(name = "balance")

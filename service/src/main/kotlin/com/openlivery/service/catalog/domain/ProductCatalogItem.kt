@@ -5,10 +5,10 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 import javax.persistence.*
 
-@Entity(name = "ProductCatalogItem")
-@Table(name = "product_catalog")
+@Entity(name = "CatalogProduct")
+@Table(name = "catalog_product")
 @Immutable
-data class ProductCatalogItem(
+class ProductCatalogItem private constructor(
         @Id
         val id: Long,
 
@@ -23,39 +23,39 @@ data class ProductCatalogItem(
 
         @Column(name = "version")
         val version: Long,
-) {
-    @Column(name = "picture_storage_key")
-    val pictureStorageKey: String? = null
 
-    @Column(name = "item_code")
-    val itemCode: String? = null
+        @Column(name = "picture_storage_key")
+        val pictureStorageKey: String? = null,
 
-    @Column(name = "brand_id")
-    val brandId: Long? = null
+        @Column(name = "item_code")
+        val itemCode: String? = null,
 
-    @Column(name = "product_name")
-    val name: String? = null
+        @Column(name = "brand_id")
+        val brandId: Long? = null,
 
-    @Column(name = "base_price")
-    val basePrice: BigDecimal? = null
+        @Column(name = "product_name")
+        val name: String? = null,
 
-    @Column(name = "final_price")
-    val finalPrice: BigDecimal? = null
+        @Column(name = "base_price")
+        val basePrice: BigDecimal,
 
-    @Column(name = "description")
-    val description: String? = null
+        @Column(name = "final_price")
+        val finalPrice: BigDecimal,
 
-    @Column(name = "decimal_discount")
-    val decimalDiscount: BigDecimal? = null
+        @Column(name = "description")
+        val description: String? = null,
 
-    @Column(name = "delivery_fee_decimal_discount")
-    val deliveryFeeDecimalDiscount: BigDecimal? = null
+        @Column(name = "decimal_discount")
+        val decimalDiscount: BigDecimal? = null,
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "product_category",
-            joinColumns = [JoinColumn(name = "product_id")],
-            inverseJoinColumns = [JoinColumn(name = "category_id")]
-    )
-    val categories: List<ProductCatalogItemCategory> = listOf()
-}
+        @Column(name = "discount_applied")
+        val discountApplied: Boolean,
+
+        @ManyToMany(fetch = FetchType.EAGER)
+        @JoinTable(
+                name = "product_category",
+                joinColumns = [JoinColumn(name = "product_id")],
+                inverseJoinColumns = [JoinColumn(name = "category_id")]
+        )
+        val categories: List<ProductCatalogItemCategory> = listOf()
+)

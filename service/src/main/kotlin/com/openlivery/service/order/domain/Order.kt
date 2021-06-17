@@ -2,6 +2,8 @@ package com.openlivery.service.order.domain
 
 import com.openlivery.service.common.domain.Address
 import com.openlivery.service.common.domain.BaseEntity
+import com.openlivery.service.order.domain.enums.OrderNonCompletionReason
+import com.openlivery.service.order.domain.enums.OrderStatus
 import java.math.BigDecimal
 import javax.persistence.*
 
@@ -17,7 +19,7 @@ data class Order(
 
         @ManyToOne(cascade = [CascadeType.PERSIST, CascadeType.MERGE])
         @JoinColumn(name = "customer_data_id")
-        val customerData: OrderCustomerData
+        val customerData: CustomerData
 ) : BaseEntity() {
 
     @OneToMany(cascade = [CascadeType.ALL], mappedBy = "orderId")
