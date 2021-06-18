@@ -8,16 +8,16 @@ import javax.persistence.*
 @IdClass(OrderProduct.OrderProductId::class)
 data class OrderProduct(
         @Id
-        @Column(name = "order_id")
-        val orderId: Long,
-
-        @Id
         @Column(name = "product_id")
         val productId: Long,
 
         @Column(name = "amount")
         val amount: Int
 ) {
+
+    @Id
+    @Column(name = "order_id")
+    var orderId: Long? = null
 
     internal class OrderProductId() : Serializable {
         var orderId: Long = -1

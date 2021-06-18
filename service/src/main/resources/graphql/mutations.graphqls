@@ -19,8 +19,8 @@ type Mutation {
     """
     ORDER
     """
-    placeOrder(input: PlaceOrderInput!): Boolean
-    placeAnonymousOrder(input: PlaceAnonymousOrderInput!): Boolean
+    placeOrder(input: PlaceOrderInput!): ID
+    placeAnonymousOrder(input: PlaceAnonymousOrderInput!): ID
 
     """
     CART
@@ -30,5 +30,7 @@ type Mutation {
     increaseProductAmount(productId: ID!): Boolean
     decreaseProductAmount(productId: ID!): Boolean
     applyCoupon(couponCode: String): Boolean
+    removeCoupon: Boolean
+    clearCart: Boolean
 
 }

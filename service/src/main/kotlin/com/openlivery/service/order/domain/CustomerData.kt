@@ -9,7 +9,10 @@ data class CustomerData(
         val completeName: String,
 
         @Column(name = "phone_number")
-        val phoneNumber: String
+        val phoneNumber: String,
+
+        @Column(name = "identity_number")
+        val identityNumber: String
 ) {
 
     @Id

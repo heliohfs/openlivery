@@ -16,6 +16,8 @@ create table if not exists "order"
     customer_rating_reason text constraint order_customer_rating_reason_depends_on_rating check (customer_rating_reason is null or customer_rating is not null),
     deliveryman_rating_reason text constraint order_deliveryman_rating_reason_depends_on_rating check (deliveryman_rating_reason is null or deliveryman_rating is not null),
 
+    coupon_applied text constraint order_coupon_applied_fkey references campaign_coupon(code) on delete set null,
+
     order_value decimal(15,6) not null,
     notes text,
 
@@ -30,6 +32,7 @@ create table if not exists "order"
             'FINISHED'
         )
     ) default 'PLACED',
+
     non_completion_reason text constraint order_non_completion_reason_depends_on_status check (
         non_completion_reason is null or status in ('CANCELED', 'INCOMPLETE')
     )

@@ -54,4 +54,7 @@ data class Order(
     @Enumerated(EnumType.STRING)
     var nonCompletionReason: OrderNonCompletionReason? = null
 
+    @Column(name = "coupon_applied")
+    var couponApplied: String? = null
+
 }

@@ -8,7 +8,7 @@ import javax.persistence.*
 @Entity(name = "OrderCustomer")
 @Table(name = "customer")
 @PrimaryKeyJoinColumn(name = "user_id")
-data class OrderCustomer(
+data class Customer(
         override val oauthId: String,
 
         @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)

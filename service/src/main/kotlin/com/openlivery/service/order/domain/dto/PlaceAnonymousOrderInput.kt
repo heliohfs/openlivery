@@ -10,24 +10,10 @@ class PlaceAnonymousOrderInput(
         val phoneNumber: String,
         val streetName: String,
         val streetNumber: Int,
+        val identityNumber: String,
         val cityName: String,
         val governingDistrict: String,
         val country: String,
         val additionalInfo: String,
-        val products: List<OrderProductInput>,
-        val displayedTotalValue: BigDecimal,
-        private val notes: String? = null
-) {
-
-    fun toOrder(
-            address: Address,
-            customerData: CustomerData,
-    ): Order {
-        return Order(
-                deliveryAddress = address,
-                notes = notes,
-                customerData = customerData,
-        )
-    }
-
-}
+        val notes: String? = null
+)

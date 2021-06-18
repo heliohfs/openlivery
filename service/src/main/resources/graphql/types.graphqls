@@ -86,3 +86,10 @@ type Cart {
     couponApplied: String
     products: [CartProduct]!
 }
+
+"""
+ORDER
+"""
+type Order {
+
+}

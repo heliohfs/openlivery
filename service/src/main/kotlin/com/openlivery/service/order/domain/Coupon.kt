@@ -22,5 +22,8 @@ class Coupon private constructor(
 
         @OneToMany(fetch = FetchType.EAGER)
         @JoinColumn(name = "campaign_id", referencedColumnName = "campaign_id")
-        val discounts: List<Discount> = mutableListOf()
+        val discounts: List<Discount> = mutableListOf(),
+
+        @Column(name = "auth_required")
+        val authRequired: Boolean = false,
 ) : Serializable

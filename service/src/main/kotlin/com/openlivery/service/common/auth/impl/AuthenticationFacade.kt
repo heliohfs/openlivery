@@ -6,22 +6,42 @@ import com.openlivery.service.common.repository.UserRepository
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
+import java.util.*
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 @Component
 class AuthenticationFacade(
-        var userRepository: UserRepository
+        var userRepository: UserRepository,
+        var request: HttpServletRequest,
 ) : IAuthenticationFacade {
+
+    override val id: String
+        get() = if (isAnonymous) this.sessionId
+        else Optional.ofNullable(this.user.id)
+                .orElseThrow { error("User is not registered") }
+                .toString()
+
     override val authentication: Authentication
         get() {
             return SecurityContextHolder.getContext().authentication
         }
 
-    override val user: User
+    override val isAnonymous: Boolean
         get() {
-            val oauthId = SecurityContextHolder.getContext().authentication.name
-            return userRepository.findOneByOauthId(oauthId)
-                    .orElseThrow { error("User not registered") }
+            val principal = this.authentication.principal
+            return principal is String && principal.equals("anonymousUser", true)
         }
 
+    override val user: User
+        get() = Optional.ofNullable(this.authentication.name)
+                .orElseThrow { error("User is not authenticated") }
+                .let { userRepository.findOneByOauthId(it) }
+                .orElseThrow { error("User not registered") }
 
+    override val sessionId: String
+        get() = Optional.ofNullable(request.getSession(false))
+                .orElse(request.getSession(true))
+                .apply { maxInactiveInterval = 60 * 60 }
+                .id
 }

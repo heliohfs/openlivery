@@ -38,6 +38,7 @@ create table if not exists campaign_coupon
     campaign_id bigint not null constraint campaign_coupon_campaign_fkey references campaign on delete cascade,
     active boolean not null default true,
     code text not null constraint campaign_coupon_code_key unique,
+    auth_required boolean not null default false,
     application_limit_by_user bigint,
     application_limit bigint,
     application_count bigint not null default 0,
