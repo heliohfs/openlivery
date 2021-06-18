@@ -3,7 +3,8 @@ create or replace view active_coupon as
         cp_coupon.id,
         cp_coupon.code,
         cp_coupon.application_limit_by_user,
-        cp_coupon.campaign_id
+        cp_coupon.campaign_id,
+        cp_coupon.auth_required
     from campaign_coupon cp_coupon
         join campaign cp
             on cp.id = cp_coupon.campaign_id

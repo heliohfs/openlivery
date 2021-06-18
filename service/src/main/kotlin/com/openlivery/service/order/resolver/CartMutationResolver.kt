@@ -2,6 +2,7 @@ package com.openlivery.service.order.resolver
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver
 import com.openlivery.service.common.auth.IAuthenticationFacade
+import com.openlivery.service.common.system.SystemParameters
 import com.openlivery.service.order.service.CartService
 import org.springframework.stereotype.Component
 
@@ -9,9 +10,12 @@ import org.springframework.stereotype.Component
 class CartMutationResolver(
         private val auth: IAuthenticationFacade,
         private val cartService: CartService,
+        private val systemParameters: SystemParameters
 ) : GraphQLMutationResolver {
 
     fun addProductToCart(productId: Long, amount: Int) {
+        if(!systemParameters.isOpenedToOrders())
+            throw error("Closed to new orders")
         cartService.addProduct(auth.id, productId, amount)
     }
 

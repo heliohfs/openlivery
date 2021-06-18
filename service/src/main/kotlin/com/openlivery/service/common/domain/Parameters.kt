@@ -1,6 +1,7 @@
 package com.openlivery.service.common.domain
 
 import java.math.BigDecimal
+import java.time.LocalTime
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -24,5 +25,11 @@ class Parameters {
 
     @Column(name = "maximum_delivery_radius")
     var maximumDeliveryRadius: Int = 0
+
+    @Column(name = "startup_order_creation_at")
+    var startupOrderCreationAt: LocalTime? = null
+
+    @Column(name = "shutdown_order_creation_at")
+    var shutdownOrderCreationAt: LocalTime? = null
 
 }
