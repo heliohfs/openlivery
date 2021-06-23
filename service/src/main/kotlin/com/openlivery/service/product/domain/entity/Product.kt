@@ -23,11 +23,11 @@ class Product(
     @Column(name = "picture_storage_key")
     var pictureStorageKey: String? = null
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")
     var brand: Brand? = null
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "product_category",
             joinColumns = [JoinColumn(name = "product_id")],

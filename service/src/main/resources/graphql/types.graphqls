@@ -36,12 +36,12 @@ PRODUCT
 type Brand {
     id: ID!
     name: String!
-    products: [Product]!
+    products(first: Int!, after: String!): ProductConnection @connection(for: "Product")
 }
 
 type Category {
     categoryName: String!
-    products: [Product]!
+    products(first: Int!, after: String!): ProductConnection @connection(for: "Product")
 }
 
 type Product {
@@ -68,8 +68,9 @@ type CatalogProduct {
     brand: Brand
     categories: [Category]!
     basePrice: Currency!
-    finalPrice: Currency
+    finalPrice: Currency!
     decimalDiscount: BigDecimal
+    discountApplied: Boolean!
 }
 
 """

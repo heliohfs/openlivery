@@ -12,4 +12,6 @@ import java.util.*
 @Repository
 interface ProductRepository : JpaRepository<Product, Long> {
 
+    fun findByCategoriesId(categoryId: Long): List<Product>
+
 }

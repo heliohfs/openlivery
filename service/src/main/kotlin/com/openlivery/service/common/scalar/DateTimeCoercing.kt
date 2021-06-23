@@ -1,4 +1,4 @@
-package com.openlivery.service.common.scalars
+package com.openlivery.service.common.scalar
 
 import graphql.language.StringValue
 import graphql.schema.Coercing

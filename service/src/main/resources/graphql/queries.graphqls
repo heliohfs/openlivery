@@ -4,6 +4,9 @@ type Query {
     PRODUCT
     """
     products(first: Int, after: String): ProductConnection @connection(for: "Product")
+    categories(first: Int, after: String): CategoryConnection @connection(for: "Category")
+    brands(first: Int, after: String): BrandConnection @connection(for: "Brand")
+    catalog(first: Int, after: String): CatalogProductConnection @connection(for: "CatalogProduct")
 #    productById(id: ID!): Product
 
 }

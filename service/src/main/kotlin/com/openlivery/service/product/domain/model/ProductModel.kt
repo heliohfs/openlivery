@@ -12,28 +12,25 @@ class ProductModel private constructor(
         val version: Int,
         val name: String,
         val price: BigDecimal,
-        val categoriesIds: List<Long>,
         val description: String? = null,
         val itemCode: String? = null,
-        val pictureStorageKey: String? = null,
-        val brandId: Long? = null
+        val pictureStorageKey: String? = null
 ) {
 
     companion object {
         fun from(product: Product): ProductModel {
+
             return ProductModel(
-                    id = product.id!!,
-                    active = product.active!!,
-                    createdDateTime = product.createdDateTime!!,
-                    changedDateTime = product.changedDateTime!!,
-                    version = product.version!!,
+                    id = product.base.id,
+                    active = product.base.active,
+                    createdDateTime = product.base.createdDateTime,
+                    changedDateTime = product.base.changedDateTime,
+                    version = product.base.version,
                     name = product.name,
                     price = product.price,
-                    categoriesIds = product.categories.map { it.id!! },
                     description = product.description,
                     itemCode = product.itemCode,
-                    pictureStorageKey = product.pictureStorageKey,
-                    brandId = product.brand?.id
+                    pictureStorageKey = product.pictureStorageKey
             )
         }
     }

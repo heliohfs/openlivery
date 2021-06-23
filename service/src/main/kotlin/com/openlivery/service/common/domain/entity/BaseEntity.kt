@@ -1,5 +1,6 @@
 package com.openlivery.service.common.domain.entity
 
+import com.openlivery.service.common.exception.IllegalEntityException
 import java.io.Serializable
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -23,6 +24,32 @@ abstract class BaseEntity : Serializable {
     @Version
     @Column(name = "version")
     open var version: Int? = 1
+
+    abstract class Base {
+        abstract val id: Long
+        abstract val active: Boolean
+        abstract val createdDateTime: LocalDateTime
+        abstract val changedDateTime: LocalDateTime
+        abstract val version: Int
+    }
+
+    @Transient
+    val base = object : Base() {
+        override val id: Long
+            get() = this@BaseEntity.id ?: throw IllegalEntityException()
+
+        override val active: Boolean
+            get() = this@BaseEntity.active ?: throw IllegalEntityException()
+
+        override val createdDateTime: LocalDateTime
+            get() = this@BaseEntity.createdDateTime ?: throw IllegalEntityException()
+
+        override val changedDateTime: LocalDateTime
+            get() = this@BaseEntity.changedDateTime ?: throw IllegalEntityException()
+
+        override val version: Int
+            get() = this@BaseEntity.version ?: throw IllegalEntityException()
+    }
 
     fun isNew(): Boolean = id == null
 

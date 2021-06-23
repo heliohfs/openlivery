@@ -1,7 +1,7 @@
 package com.openlivery.service.common.config
 
-import com.openlivery.service.common.scalars.CurrencyCoercing
-import com.openlivery.service.common.scalars.DateTimeCoercing
+import com.openlivery.service.common.scalar.CurrencyCoercing
+import com.openlivery.service.common.scalar.DateTimeCoercing
 import graphql.Scalars
 import graphql.schema.GraphQLScalarType
 import org.springframework.context.annotation.Bean

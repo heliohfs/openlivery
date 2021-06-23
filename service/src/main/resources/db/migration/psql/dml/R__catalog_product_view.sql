@@ -3,7 +3,7 @@ create or replace view catalog_product as
         prod.*,
         coalesce(round(prod.base_price - (max(cp_prod.decimal_discount) * prod.base_price), 6), prod.base_price) as final_price,
         max(cp_prod.decimal_discount) as decimal_discount,
-        (case max(cp_prod.decimal_discount) when null then false else true end) as discount_applied
+        (case when max(cp_prod.decimal_discount) is null then false else true end) as discount_applied
     from campaign cp
         join campaign_discount cp_prod
             on cp.id = cp_prod.campaign_id and
