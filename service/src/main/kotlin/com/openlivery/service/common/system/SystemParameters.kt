@@ -1,6 +1,6 @@
 package com.openlivery.service.common.system
 
-import com.openlivery.service.common.domain.Parameters
+import com.openlivery.service.common.domain.entity.Parameters
 import com.openlivery.service.common.repository.ParametersRepository
 import org.springframework.stereotype.Service
 import java.math.BigDecimal

@@ -1,10 +1,5 @@
 create or replace view active_coupon as
-    select
-        cp_coupon.id,
-        cp_coupon.code,
-        cp_coupon.application_limit_by_user,
-        cp_coupon.campaign_id,
-        cp_coupon.auth_required
+    select cp_coupon.*
     from campaign_coupon cp_coupon
         join campaign cp
             on cp.id = cp_coupon.campaign_id

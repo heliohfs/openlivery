@@ -1,14 +1,13 @@
 package com.openlivery.service.common.auth.impl
 
 import com.openlivery.service.common.auth.IAuthenticationFacade
-import com.openlivery.service.common.domain.User
+import com.openlivery.service.common.domain.entity.User
 import com.openlivery.service.common.repository.UserRepository
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import java.util.*
 import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 @Component
 class AuthenticationFacade(

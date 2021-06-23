@@ -1,7 +1,6 @@
 package com.openlivery.service.common.repository
 
-import com.openlivery.service.common.domain.Authority
-import com.openlivery.service.common.domain.User
+import com.openlivery.service.common.domain.entity.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository

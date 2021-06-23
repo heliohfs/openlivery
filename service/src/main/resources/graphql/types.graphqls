@@ -1,6 +1,37 @@
 scalar DateTime
-scalar SortCriterion
 scalar BigDecimal
+scalar BigInteger
+scalar Currency
+
+type Authority {
+    id: ID!,
+    name: String!
+}
+
+type Customer {
+    id: ID!
+    completeName: String!
+    phoneNumber: String!
+    defaultAddress: Address
+    balance: Currency
+    addresses: [Address]
+}
+
+type Address {
+    id: ID!
+    latitude: String!
+    longitude: String!
+    streetName: String!
+    streetNumber: Int!
+    cityName: String!
+    governingDistrict: String!
+    country: String!
+    additionalInfo: String
+}
+
+"""
+PRODUCT
+"""
 
 type Brand {
     id: ID!
@@ -15,57 +46,30 @@ type Category {
 
 type Product {
     id: ID!
+    active: Boolean!
+    createdDateTime: DateTime!
+    changedDateTime: DateTime!
+    version: Int!
     name: String!
-    price: BigDecimal!
+    price: Currency!
     description: String
     itemCode: String
-    pictureUrl: String
+    pictureStorageKey: String
     brand: Brand
     categories: [Category]!
 }
 
-type CatalogItemCategory {
-    id: ID!
-    categoryName: String!
-}
-
-type CatalogItem {
+type CatalogProduct {
     id: ID!
     name: String!
-    basePrice: BigDecimal!
-    finalPrice: BigDecimal
-    pictureStorageKey: String
-    itemCode: String
-    brandId: ID
     description: String
+    itemCode: String
+    pictureStorageKey: String
+    brand: Brand
+    categories: [Category]!
+    basePrice: Currency!
+    finalPrice: Currency
     decimalDiscount: BigDecimal
-    categories: [CatalogItemCategory]!
-}
-
-type Address {
-    id: ID!,
-    latitude: String!,
-    longitude: String!,
-    streetName: String!,
-    streetNumber: Int!,
-    cityName: String!,
-    governingDistrict: String!,
-    country: String!,
-    additionalInfo: String,
-}
-
-type Authority {
-    id: ID!,
-    name: String!
-}
-
-type Customer {
-    id: ID!
-    completeName: String!
-    phoneNumber: String!
-    defaultAddress: Address
-    balance: BigDecimal
-    addresses: [Address]
 }
 
 """
@@ -73,16 +77,16 @@ CART
 """
 type CartProduct {
     id: ID!
-    finalPrice: BigDecimal!
-    basePrice: BigDecimal!
+    finalPrice: Currency!
+    basePrice: Currency!
     pictureStorageKey: String
     amount: Int!
     discountApplied: Boolean!
 }
 
 type Cart {
-    totalValue: BigDecimal!
-    deliveryFee: BigDecimal!
+    totalValue: Currency!
+    deliveryFee: Currency!
     couponApplied: String
     products: [CartProduct]!
 }

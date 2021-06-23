@@ -1,6 +1,6 @@
 package com.openlivery.service.common.auth
 
-import com.openlivery.service.common.domain.User
+import com.openlivery.service.common.domain.entity.User
 import org.springframework.security.core.Authentication
 
 interface IAuthenticationFacade {
