@@ -19,8 +19,8 @@ repositories {
 
 dependencies {
 	implementation("me.paulschwarz:spring-dotenv:2.3.0")
-	implementation("com.graphql-java:graphql-spring-boot-starter:5.0.2")
-	implementation("com.graphql-java:graphql-java-tools:5.2.4")
+	implementation("com.graphql-java-kickstart:graphql-spring-boot-starter:11.0.0")
+	implementation("com.graphql-java-kickstart:graphql-java-tools:11.0.0")
 	implementation("org.springframework.boot:spring-boot-starter-redis:1.4.7.RELEASE")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
