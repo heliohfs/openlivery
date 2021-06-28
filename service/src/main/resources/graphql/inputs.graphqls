@@ -1,17 +1,64 @@
-input PageInfoInput {
-    page: Int
-    size: Int
+
+input AddressInput {
+    latitude: String
+    longitude: String
+    streetName: String!
+    streetNumber: Int!
+    cityName: String!
+    governingDistrict: String!
+    country: String!
+    additionalInfo: String!
 }
 
-input ProductInput {
-    id: ID
+"""
+PRODUCT
+"""
+input InsertProductInput {
     name: String!
-    price: BigDecimal!
+    basePrice: BigDecimal!
     description: String
     itemCode: String
-    categoriesIds: [ID],
+    categoriesIds: [ID]
     brandId: ID
 }
+
+input UpdateProductInput {
+    id: ID!
+    name: String!
+    basePrice: BigDecimal!
+    description: String
+    itemCode: String
+    categoriesIds: [ID]
+    brandId: ID
+}
+
+"""
+BRAND
+"""
+input InsertBrandInput {
+    name: String!
+}
+
+input UpdateBrandInput {
+    id: ID!
+    name: String!
+}
+
+"""
+CATEGORY
+"""
+input InsertCategoryInput {
+    categoryName: String!
+}
+
+input UpdateCategoryInput {
+    id: ID!
+    categoryName: String!
+}
+
+"""
+CART
+"""
 
 input CustomerAddressInput {
     latitude: String

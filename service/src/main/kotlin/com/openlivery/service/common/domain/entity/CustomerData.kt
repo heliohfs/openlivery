@@ -9,7 +9,10 @@ data class CustomerData(
         var completeName: String,
 
         @Column(name = "phone_number")
-        var phoneNumber: String
+        var phoneNumber: String,
+
+        @Column(name = "identity_number")
+        var identityNumber: String
 ) {
 
     @Id
@@ -18,5 +21,8 @@ data class CustomerData(
 
     @OneToOne(mappedBy = "data")
     val customer: Customer? = null
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customerData")
+    val appliedDiscounts: Set<AppliedDiscount> = hashSetOf()
 
 }

@@ -3,10 +3,18 @@ type Query {
     """
     PRODUCT
     """
-    products(first: Int, after: String): ProductConnection @connection(for: "Product")
-    categories(first: Int, after: String): CategoryConnection @connection(for: "Category")
-    brands(first: Int, after: String): BrandConnection @connection(for: "Brand")
-    catalog(first: Int, after: String): CatalogProductConnection @connection(for: "CatalogProduct")
-#    productById(id: ID!): Product
+    products(first: Int!, after: String!): ProductConnection! @connection(for: "Product")
+    productById(id: ID!): Product
+    catalog(first: Int!, after: String!): CatalogProductConnection! @connection(for: "CatalogProduct")
+    catalogProductById(id: ID!): CatalogProduct
+    categories(first: Int!, after: String!): CategoryConnection! @connection(for: "Category")
+    categoryById(id: ID!): Category
+    brands(first: Int!, after: String!): BrandConnection! @connection(for: "Brand")
+    brandById(id: ID!): Brand
+
+    """
+    CART
+    """
+    cart: Cart
 
 }

@@ -1,7 +1,21 @@
+directive @connection(for: String) on FIELD_DEFINITION
+
 scalar DateTime
 scalar BigDecimal
 scalar BigInteger
 scalar Currency
+
+enum DiscountAccess {
+    COUPON
+    CATALOG
+    FIRST_ORDER
+    ALL_ORDERS
+}
+
+enum DiscountType {
+    PERCENT_OFF
+    AMOUNT_OFF
+}
 
 type Authority {
     id: ID!,
@@ -35,11 +49,14 @@ PRODUCT
 
 type Brand {
     id: ID!
+    active: Boolean!
     name: String!
     products(first: Int!, after: String!): ProductConnection @connection(for: "Product")
 }
 
 type Category {
+    id: ID!
+    active: Boolean!
     categoryName: String!
     products(first: Int!, after: String!): ProductConnection @connection(for: "Product")
 }
@@ -51,7 +68,7 @@ type Product {
     changedDateTime: DateTime!
     version: Int!
     name: String!
-    price: Currency!
+    basePrice: Currency!
     description: String
     itemCode: String
     pictureStorageKey: String
@@ -69,27 +86,55 @@ type CatalogProduct {
     categories: [Category]!
     basePrice: Currency!
     finalPrice: Currency!
-    decimalDiscount: BigDecimal
+    discountType: DiscountType
+    discount: BigDecimal
     discountApplied: Boolean!
 }
 
 """
 CART
 """
+
+type CartDeliveryAddress {
+    streetName: String!
+    streetNumber: Int!
+    cityName: String!
+    governingDistrict: String!
+    country: String!
+    additionalInfo: String
+    latitude: String!
+    longitude: String!
+}
+
 type CartProduct {
     id: ID!
-    finalPrice: Currency!
     basePrice: Currency!
-    pictureStorageKey: String
+    finalPrice: Currency!
     amount: Int!
     discountApplied: Boolean!
+    discountSource: DiscountAccess
+    discountType: DiscountType
+    discount: BigDecimal
+    pictureStorageKey: String
 }
 
 type Cart {
-    totalValue: Currency!
-    deliveryFee: Currency!
     couponApplied: String
+    orderDiscountSource: DiscountAccess
+    orderDiscountType: DiscountType
+    orderDiscount: BigDecimal
+    orderValue: Currency!
+    finalOrderValue: Currency!
+    orderDiscountApplied: Boolean!
+    deliveryFeeDiscountSource: DiscountAccess
+    deliveryFeeDiscountType: DiscountType
+    deliveryFeeDiscount: BigDecimal
+    deliveryFee: Currency
+    finalDeliveryFee: Currency
+    deliveryFeeDiscountApplied: Boolean!
     products: [CartProduct]!
+    deliveryAddress: CartDeliveryAddress
+    finalValue: Currency!
 }
 
 """

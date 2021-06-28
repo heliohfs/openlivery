@@ -1,49 +1,28 @@
 package com.openlivery.service.product.domain.entity
 
+import com.openlivery.service.product.domain.enums.DiscountType
 import org.springframework.data.annotation.Immutable
 import java.math.BigDecimal
 import javax.persistence.*
 
-@Entity(name = "CatalogProduct")
-@Immutable
+@Entity
 @Table(name = "catalog_product")
+@Immutable
 class CatalogProduct private constructor(
-        @Id
-        val id: Long,
+        name: String,
 
-        @Column(name = "product_name")
-        val name: String,
-
-        @Column(name = "base_price")
-        val basePrice: BigDecimal,
-
-        @Column(name = "description")
-        val description: String,
-
-        @Column(name = "item_code")
-        val itemCode: String? = null,
-
-        @Column(name = "picture_storage_key")
-        val pictureStorageKey: String? = null,
-
-        @ManyToOne
-        @JoinColumn(name = "brand_id")
-        val brand: Brand? = null,
-
-        @ManyToMany(fetch = FetchType.EAGER)
-        @JoinTable(
-                name = "product_category",
-                joinColumns = [JoinColumn(name = "product_id")],
-                inverseJoinColumns = [JoinColumn(name = "category_id")]
-        )
-        val categories: MutableSet<Category> = mutableSetOf(),
+        basePrice: BigDecimal,
 
         @Column(name = "final_price")
         val finalPrice: BigDecimal,
 
-        @Column(name = "decimal_discount")
-        val decimalDiscount: BigDecimal? = null,
+        @Column(name = "discount_type")
+        @Enumerated(EnumType.STRING)
+        val discountType: DiscountType,
+
+        @Column(name = "discount")
+        val discount: BigDecimal,
 
         @Column(name = "discount_applied")
-        val discountApplied: Boolean
-)
+        val discountApplied: Boolean,
+): BaseProduct(name, basePrice)

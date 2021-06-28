@@ -9,19 +9,19 @@ import javax.persistence.Table
 @Table(name = "address")
 data class Address(
         @Column(name = "street_name")
-        var streetName: String? = null,
+        var streetName: String,
 
         @Column(name = "street_number")
-        var streetNumber: Int? = null,
+        var streetNumber: Int,
 
         @Column(name = "city_name")
-        var cityName: String? = null,
+        var cityName: String,
 
         @Column(name = "governing_district")
-        var governingDistrict: String? = null,
+        var governingDistrict: String,
 
         @Column(name = "country")
-        var country: String? = null,
+        var country: String,
 
         @Column(name = "additional_info")
         var additionalInfo: String? = null,

@@ -1,4 +1,35 @@
-#type Mutation {
+type Mutation {
+
+    """
+    PRODUCT
+    """
+    insertProduct(input: InsertProductInput!): Product
+    updateProduct(input: UpdateProductInput!): Product
+    disableProduct(productId: ID!): Product
+    deleteProduct(productId: ID!): Boolean
+    enableProduct(productId: ID!): Boolean
+
+    """
+    BRAND
+    """
+    insertBrand(input: InsertBrandInput!): Brand
+    updateBrand(input: UpdateBrandInput!): Brand
+    disableBrand(brandId: ID!): Brand
+    deleteBrand(brandId: ID!): Boolean
+    enableBrand(brandId: ID!): Boolean
+
+    """
+    CART
+    """
+    addProductToCart(productId: ID!, amount: Int!): Cart
+    removeProductFromCart(productId: ID!): Cart
+    increaseCartProductAmount(productId: ID!, amount: Int!): Cart
+    decreaseCartProductAmount(productId: ID!, amount: Int!): Cart
+    setCartExistingDeliveryAddress(addressId: ID!): Cart
+    setCartNewDeliveryAddress(address: AddressInput): Cart
+    applyCoupon(couponCode: String): Cart
+    removeCoupon: Cart
+    clearCart: Cart
 
 #    """
 #    PRODUCT
@@ -33,4 +64,4 @@
 #    removeCoupon: Boolean
 #    clearCart: Boolean
 
-#}
+}

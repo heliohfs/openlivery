@@ -8,10 +8,10 @@ create table if not exists address
 
     latitude decimal(8,6),
     longitude decimal(9,6),
-    street_name text,
-    street_number numeric,
+    street_name text not null,
+    street_number numeric not null,
     additional_info text,
-    city_name text,
-    governing_district text,
-    country text
+    city_name text not null,
+    governing_district text not null,
+    country text not null
 );

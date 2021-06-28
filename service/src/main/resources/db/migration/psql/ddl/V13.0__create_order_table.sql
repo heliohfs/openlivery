@@ -16,7 +16,7 @@ create table if not exists "order"
     customer_rating_reason text constraint order_customer_rating_reason_depends_on_rating check (customer_rating_reason is null or customer_rating is not null),
     deliveryman_rating_reason text constraint order_deliveryman_rating_reason_depends_on_rating check (deliveryman_rating_reason is null or deliveryman_rating is not null),
 
-    coupon_applied text constraint order_coupon_applied_fkey references campaign_coupon(code) on delete set null,
+    coupon_applied text constraint order_coupon_applied_fkey references coupon on delete set null,
 
     order_value decimal(15,6) not null,
     notes text,

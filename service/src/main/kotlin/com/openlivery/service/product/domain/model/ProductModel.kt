@@ -11,7 +11,7 @@ class ProductModel private constructor(
         val changedDateTime: LocalDateTime,
         val version: Int,
         val name: String,
-        val price: BigDecimal,
+        val basePrice: BigDecimal,
         val description: String? = null,
         val itemCode: String? = null,
         val pictureStorageKey: String? = null
@@ -19,7 +19,6 @@ class ProductModel private constructor(
 
     companion object {
         fun from(product: Product): ProductModel {
-
             return ProductModel(
                     id = product.base.id,
                     active = product.base.active,
@@ -27,7 +26,7 @@ class ProductModel private constructor(
                     changedDateTime = product.base.changedDateTime,
                     version = product.base.version,
                     name = product.name,
-                    price = product.price,
+                    basePrice = product.basePrice,
                     description = product.description,
                     itemCode = product.itemCode,
                     pictureStorageKey = product.pictureStorageKey

@@ -38,12 +38,11 @@ insert into product(
 insert into campaign(
 	campaign_name,
 	start_datetime,
-	end_datetime,
-	discount_strategy
+	end_datetime
 ) values
-    ('Campanha Atual', current_timestamp, current_timestamp + interval '1' day, 'CATALOG'),
-    ('Campanha Futura', current_timestamp + interval '1' day, current_timestamp + interval '2' day, 'CATALOG'),
-    ('Campanha Antiga', current_timestamp - interval '2' day, current_timestamp - interval '1' day, 'CATALOG');
+    ('Campanha Atual', current_timestamp, current_timestamp + interval '1' day),
+    ('Campanha Futura', current_timestamp + interval '1' day, current_timestamp + interval '2' day),
+    ('Campanha Antiga', current_timestamp - interval '2' day, current_timestamp - interval '1' day);
 
 
 insert into category(category_name) values
@@ -74,28 +73,30 @@ insert into product_category(product_id, category_id) values
 
 
 insert into campaign_discount(
-	decimal_discount,
 	campaign_id,
-	product_id,
-	discount_type
+	apply_to,
+	access_by,
+	discount_type,
+	discount,
+	product_id
 ) values
-	(0.1, 1, 1, 'PRODUCT'),
-	(0.2, 1, 2, 'PRODUCT'),
-	(0.3, 1, 3, 'PRODUCT'),
-	(0.4, 1, 4, 'PRODUCT'),
-	(0.5, 1, 5, 'PRODUCT'),
-	(0.6, 2, 6, 'PRODUCT'),
-	(0.7, 2, 7, 'PRODUCT'),
-	(0.8, 2, 8, 'PRODUCT'),
-	(0.9, 2, 9, 'PRODUCT'),
-	(0.10, 2, 10, 'PRODUCT'),
-	(0.11, 3, 11, 'PRODUCT'),
-	(0.12, 3, 12, 'PRODUCT'),
-	(0.13, 3, 13, 'PRODUCT'),
-	(0.14, 3, 14, 'PRODUCT'),
-	(0.15, 3, 15, 'PRODUCT'),
-	(0.16, 3, 16, 'PRODUCT'),
-	(0.17, 3, 17, 'PRODUCT');
+	(1, 'PRODUCT', 'CATALOG', 'PERCENT_OFF', 0.1, 1),
+	(1, 'PRODUCT', 'CATALOG', 'PERCENT_OFF', 0.2, 2),
+	(1, 'PRODUCT', 'CATALOG', 'PERCENT_OFF', 0.3, 3),
+	(1, 'PRODUCT', 'CATALOG', 'PERCENT_OFF', 0.4, 4),
+	(1, 'PRODUCT', 'CATALOG', 'PERCENT_OFF', 0.5, 5),
+	(2, 'PRODUCT', 'CATALOG', 'PERCENT_OFF', 0.6, 6),
+	(2, 'PRODUCT', 'CATALOG', 'PERCENT_OFF', 0.7, 7),
+	(2, 'PRODUCT', 'CATALOG', 'PERCENT_OFF', 0.8, 8),
+	(2, 'PRODUCT', 'CATALOG', 'PERCENT_OFF', 0.9, 9),
+	(2, 'PRODUCT', 'CATALOG', 'PERCENT_OFF', 0.10, 10),
+	(3, 'PRODUCT', 'CATALOG', 'PERCENT_OFF', 0.11, 11),
+	(3, 'PRODUCT', 'CATALOG', 'PERCENT_OFF', 0.12, 12),
+	(3, 'PRODUCT', 'CATALOG', 'PERCENT_OFF', 0.13, 13),
+	(3, 'PRODUCT', 'CATALOG', 'PERCENT_OFF', 0.14, 14),
+	(3, 'PRODUCT', 'CATALOG', 'PERCENT_OFF', 0.15, 15),
+	(3, 'PRODUCT', 'CATALOG', 'PERCENT_OFF', 0.16, 16),
+	(3, 'PRODUCT', 'CATALOG', 'PERCENT_OFF', 0.17, 17);
 
 
 insert into distributor(

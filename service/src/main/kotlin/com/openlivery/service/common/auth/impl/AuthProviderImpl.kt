@@ -1,6 +1,6 @@
 package com.openlivery.service.common.auth.impl
 
-import com.openlivery.service.common.auth.IAuthenticationFacade
+import com.openlivery.service.common.auth.AuthProvider
 import com.openlivery.service.common.domain.entity.User
 import com.openlivery.service.common.repository.UserRepository
 import org.springframework.security.core.Authentication
@@ -10,10 +10,10 @@ import java.util.*
 import javax.servlet.http.HttpServletRequest
 
 @Component
-class AuthenticationFacade(
+class AuthProviderImpl(
         var userRepository: UserRepository,
         var request: HttpServletRequest,
-) : IAuthenticationFacade {
+) : AuthProvider {
 
     override val id: String
         get() = if (isAnonymous) this.sessionId
