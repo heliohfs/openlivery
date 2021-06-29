@@ -1,8 +1,4 @@
 type Query {
-
-    """
-    PRODUCT
-    """
     products(first: Int!, after: String!): ProductConnection! @connection(for: "Product")
     productById(id: ID!): Product
     catalog(first: Int!, after: String!): CatalogProductConnection! @connection(for: "CatalogProduct")
@@ -12,9 +8,8 @@ type Query {
     brands(first: Int!, after: String!): BrandConnection! @connection(for: "Brand")
     brandById(id: ID!): Brand
 
-    """
-    CART
-    """
     cart: Cart
 
+    orderById(id: ID!): Order
+    placedOrders(first: Int!, after: String!): [Order]
 }

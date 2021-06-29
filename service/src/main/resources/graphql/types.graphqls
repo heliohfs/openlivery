@@ -17,6 +17,16 @@ enum DiscountType {
     AMOUNT_OFF
 }
 
+enum OrderStatus {
+    CANCELED
+    INCOMPLETE
+    PLACED
+    TIMEOUT
+    ACCEPTED
+    ON_ROUTE
+    FINISHED
+}
+
 type Authority {
     id: ID!,
     name: String!
@@ -29,6 +39,12 @@ type Customer {
     defaultAddress: Address
     balance: Currency
     addresses: [Address]
+}
+
+type CustomerData {
+    completeName: String
+    phoneNumber: String
+    identityNumber: String
 }
 
 type Address {
@@ -140,6 +156,21 @@ type Cart {
 """
 ORDER
 """
-type Order {
 
+type OrderProduct {
+    product: Product!
+    order: Order!
+    amount: Int!
+    price: Currency!
+}
+
+type AnonymousOrderInfo {
+    id: ID!
+    createdDateTime: DateTime!
+    deliveryAddress: String!
+    customerName: String!
+    orderProducts: [OrderProduct]!
+    orderValue: Currency!
+    status: OrderStatus
+    notes: String
 }

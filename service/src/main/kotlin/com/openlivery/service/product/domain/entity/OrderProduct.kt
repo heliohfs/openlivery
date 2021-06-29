@@ -1,6 +1,7 @@
 package com.openlivery.service.product.domain.entity
 
 import java.io.Serializable
+import java.math.BigDecimal
 import javax.persistence.*
 
 @Entity
@@ -8,24 +9,29 @@ import javax.persistence.*
 @IdClass(OrderProduct.Key::class)
 data class OrderProduct(
         @Id
-        @Column(name = "product_id")
-        val productId: Long,
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinColumn(name = "product_id")
+        val product: Product? = null,
+
+        @Id
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinColumn(name = "order_id")
+        val order: Order? = null,
 
         @Column(name = "amount")
-        val amount: Int
+        val amount: Int,
+
+        @Column(name = "price")
+        val price: BigDecimal
 ) {
 
-    @Id
-    @Column(name = "order_id")
-    var orderId: Long? = null
-
     class Key() : Serializable {
-        var orderId: Long = -1
-        var productId: Long = -1
+        var order: Long = -1
+        var product: Long = -1
 
-        constructor(orderId: Long, productId: Long) : this() {
-            this.orderId = orderId
-            this.productId = productId
+        constructor(order: Long, product: Long) : this() {
+            this.order = order
+            this.product = product
         }
 
         override fun equals(other: Any?): Boolean {
@@ -34,15 +40,15 @@ data class OrderProduct(
 
             other as Key
 
-            if (orderId != other.orderId) return false
-            if (productId != other.productId) return false
+            if (order != other.order) return false
+            if (product != other.product) return false
 
             return true
         }
 
         override fun hashCode(): Int {
-            var result = orderId.hashCode()
-            result = 31 * result + productId.hashCode()
+            var result = order.hashCode()
+            result = 31 * result + product.hashCode()
             return result
         }
     }

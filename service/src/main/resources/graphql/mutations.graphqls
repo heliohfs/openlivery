@@ -1,26 +1,17 @@
 type Mutation {
 
-    """
-    PRODUCT
-    """
     insertProduct(input: InsertProductInput!): Product
     updateProduct(input: UpdateProductInput!): Product
     disableProduct(productId: ID!): Product
     deleteProduct(productId: ID!): Boolean
     enableProduct(productId: ID!): Boolean
 
-    """
-    BRAND
-    """
     insertBrand(input: InsertBrandInput!): Brand
     updateBrand(input: UpdateBrandInput!): Brand
     disableBrand(brandId: ID!): Brand
     deleteBrand(brandId: ID!): Boolean
     enableBrand(brandId: ID!): Boolean
 
-    """
-    CART
-    """
     addProductToCart(productId: ID!, amount: Int!): Cart
     removeProductFromCart(productId: ID!): Cart
     increaseCartProductAmount(productId: ID!, amount: Int!): Cart
@@ -31,37 +22,6 @@ type Mutation {
     removeCoupon: Cart
     clearCart: Cart
 
-#    """
-#    PRODUCT
-#    """
-#    upsertProduct(productInput: ProductInput!): Product
-#    deleteProductById(id: ID!): Boolean
-#    upsertBrand(brandInput: BrandInput!): Brand
-#    deleteBrandById(id: ID!): Boolean
-#    upsertCategory(categoryInput: CategoryInput!): Category
-#    deleteCategoryById(id: ID!): Boolean
-#
-#    """
-#    CUSTOMER
-#    """
-#    registerCustomer(input: CustomerRegistrationInput!): Boolean
-#    disableCustomer(customerId: ID!): Boolean
-#
-#    """
-#    ORDER
-#    """
-#    placeOrder(input: PlaceOrderInput!): ID
-#    placeAnonymousOrder(input: PlaceAnonymousOrderInput!): ID
-#
-#    """
-#    CART
-#    """
-#    addProductToCart(productId: ID!, amount: Int): Boolean
-#    removeProductFromCart(productId: ID!): Boolean
-#    increaseProductAmount(productId: ID!): Boolean
-#    decreaseProductAmount(productId: ID!): Boolean
-#    applyCoupon(couponCode: String): Boolean
-#    removeCoupon: Boolean
-#    clearCart: Boolean
+    placeOrder(notes: String): Order
 
 }

@@ -1,13 +1,17 @@
 package com.openlivery.service.product.service
 
-import com.openlivery.service.common.domain.model.AddressInput
-import com.openlivery.service.common.repository.AddressRepository
-import com.openlivery.service.product.domain.entity.*
+import com.openlivery.service.product.domain.entity.Brand
+import com.openlivery.service.product.domain.entity.CatalogProduct
+import com.openlivery.service.product.domain.entity.Category
+import com.openlivery.service.product.domain.entity.Product
 import com.openlivery.service.product.domain.input.InsertBrandInput
 import com.openlivery.service.product.domain.input.InsertProductInput
 import com.openlivery.service.product.domain.input.UpdateBrandInput
 import com.openlivery.service.product.domain.input.UpdateProductInput
-import com.openlivery.service.product.repository.*
+import com.openlivery.service.product.repository.BrandRepository
+import com.openlivery.service.product.repository.CatalogProductRepository
+import com.openlivery.service.product.repository.CategoryRepository
+import com.openlivery.service.product.repository.ProductRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -15,13 +19,11 @@ import kotlin.collections.HashSet
 
 @Service
 @Transactional
-class ProductManipulationService(
+class ProductService(
         private val productRepository: ProductRepository,
         private val brandRepository: BrandRepository,
         private val categoryRepository: CategoryRepository,
-        private val catalogProductRepository: CatalogProductRepository,
-        private val cartRepository: CartRepository,
-        private val addressRepository: AddressRepository
+        private val catalogProductRepository: CatalogProductRepository
 ) {
 
     fun insertProduct(input: InsertProductInput) =
@@ -92,5 +94,27 @@ class ProductManipulationService(
             .run { brandRepository.save(this) }
 
     fun deleteBrand(brandId: Long) = brandRepository.deleteById(brandId)
+
+    fun findAllProducts() = productRepository.findAll()
+
+    fun findProductsByCategoryId(categoryId: Long) = productRepository.findByCategoriesId(categoryId)
+
+    fun findAllBrands() = brandRepository.findAll()
+
+    fun findBrandByProductId(productId: Long) = brandRepository.findByProductsId(productId)
+
+    fun findCategoriesByProductId(productId: Long) = categoryRepository.findByProductsId(productId)
+
+    fun findAllCategories() = categoryRepository.findAll()
+
+    fun findAllCatalogProducts() = catalogProductRepository.findAll()
+
+    fun findProductById(id: Long) = productRepository.findById(id)
+
+    fun findCategoryById(id: Long) = categoryRepository.findById(id)
+
+    fun findBrandById(id: Long) = brandRepository.findById(id)
+
+    fun findCatalogProductById(id: Long) = catalogProductRepository.findById(id)
 
 }

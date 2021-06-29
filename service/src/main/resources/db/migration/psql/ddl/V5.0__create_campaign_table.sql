@@ -23,6 +23,7 @@ create table if not exists coupon
     application_limit bigint,
     application_limit_by_user bigint,
     allow_anonymous boolean default false,
+    campaign_id bigint not null constraint coupon_campaign_fkey references campaign on delete cascade,
 
     constraint coupon_application_limit_is_positive check (application_limit is null or application_limit >= 0),
     constraint coupon_application_limit_by_user_is_positive check (application_limit is null or application_limit >= 0)

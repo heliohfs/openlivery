@@ -26,8 +26,8 @@ data class Order(
     @OneToMany(cascade = [CascadeType.ALL], mappedBy = "orderId")
     var orderProducts: MutableSet<OrderProduct> = mutableSetOf()
 
-    @Column(name = "order_value")
-    var orderValue: BigDecimal = BigDecimal.ZERO
+    @Column(name = "delivery_fee")
+    var deliveryFee: BigDecimal = BigDecimal.ZERO
 
     @Column(name = "deliveryman_id")
     var deliverymanId: Long? = null

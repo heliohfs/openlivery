@@ -9,15 +9,15 @@ class Coupon(
         @Column(name = "code")
         var code: String,
 
-        @OneToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "campaign_discount_id")
-        var discount: Discount,
-
         @Column(name = "active")
         var active: Boolean = true,
 
         @Column(name = "application_count")
         var applicationCount: Long = 0,
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "campaign_id")
+        var campaign: Campaign,
 
         @Column(name = "application_limit")
         var applicationLimit: Long? = null,
