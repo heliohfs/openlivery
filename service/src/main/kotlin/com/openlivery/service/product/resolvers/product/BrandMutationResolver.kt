@@ -1,46 +1,46 @@
-package com.openlivery.service.product.resolvers
+package com.openlivery.service.product.resolvers.product
 
 import com.openlivery.service.common.domain.entity.Authority
 import com.openlivery.service.product.domain.input.InsertBrandInput
 import com.openlivery.service.product.domain.input.UpdateBrandInput
 import com.openlivery.service.product.domain.model.BrandModel
-import com.openlivery.service.product.service.ProductManipulationService
+import com.openlivery.service.product.service.ProductService
 import graphql.kickstart.tools.GraphQLMutationResolver
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Component
 
 @Component
 class BrandMutationResolver(
-        private val productManipulationService: ProductManipulationService
+        private val productService: ProductService
 ) : GraphQLMutationResolver {
 
     @PreAuthorize("hasAuthority('${Authority.CREATE_BRAND}')")
     fun insertBrand(input: InsertBrandInput): BrandModel {
-        return productManipulationService.insertBrand(input)
+        return productService.insertBrand(input)
                 .let { BrandModel.from(it) }
     }
 
     @PreAuthorize("hasAuthority('${Authority.UPDATE_BRAND}')")
     fun updateBrand(input: UpdateBrandInput): BrandModel {
-        return productManipulationService.updateBrand(input)
+        return productService.updateBrand(input)
                 .let { BrandModel.from(it) }
     }
 
     @PreAuthorize("hasAuthority('${Authority.UPDATE_BRAND}')")
     fun disableBrand(brandId: Long): BrandModel {
-        return productManipulationService.disableBrand(brandId)
+        return productService.disableBrand(brandId)
                 .let { BrandModel.from(it) }
     }
 
     @PreAuthorize("hasAuthority('${Authority.UPDATE_BRAND}')")
     fun enableBrand(brandId: Long): BrandModel {
-        return productManipulationService.enableBrand(brandId)
+        return productService.enableBrand(brandId)
                 .let { BrandModel.from(it) }
     }
 
     @PreAuthorize("hasAuthority('${Authority.DELETE_BRAND}')")
     fun deleteBrand(brandId: Long): Boolean {
-        productManipulationService.deleteBrand(brandId)
+        productService.deleteBrand(brandId)
         return true
     }
 

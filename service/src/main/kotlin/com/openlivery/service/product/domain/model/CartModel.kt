@@ -8,13 +8,14 @@ import java.math.BigDecimal
 
 class CartModel private constructor(
         val couponApplied: String?,
-        val orderDiscountSource: DiscountAccess?,
+        val orderDiscountSource: String?,
         val orderDiscountType: DiscountType?,
         val orderDiscount: BigDecimal?,
         val orderValue: BigDecimal,
+        val orderValueSaved: BigDecimal?,
         val finalOrderValue: BigDecimal,
         val orderDiscountApplied: Boolean,
-        val deliveryFeeDiscountSource: DiscountAccess?,
+        val deliveryFeeDiscountSource: String?,
         val deliveryFeeDiscountType: DiscountType?,
         val deliveryFeeDiscount: BigDecimal?,
         val deliveryFee: BigDecimal?,
@@ -22,7 +23,8 @@ class CartModel private constructor(
         val deliveryFeeDiscountApplied: Boolean,
         val products: List<CartProductModel>,
         val deliveryAddress: CartDeliveryAddress?,
-        val finalValue: BigDecimal
+        val finalValue: BigDecimal,
+        val orderingAvailable: Boolean
 ) {
 
     companion object {
@@ -32,6 +34,7 @@ class CartModel private constructor(
                     orderDiscountSource = cart.orderDiscountSource,
                     orderDiscountType = cart.orderDiscountType,
                     orderDiscount = cart.orderDiscount,
+                    orderValueSaved = cart.orderValueSaved,
                     orderValue = cart.orderValue,
                     finalOrderValue = cart.finalOrderValue,
                     orderDiscountApplied = cart.orderDiscountApplied,
@@ -43,7 +46,8 @@ class CartModel private constructor(
                     deliveryFeeDiscountApplied = cart.deliveryFeeDiscountApplied,
                     products = cart.products.map { CartProductModel.from(it) },
                     deliveryAddress = cart.deliveryAddress,
-                    finalValue = cart.finalValue
+                    finalValue = cart.finalValue,
+                    orderingAvailable = cart.orderingAvailable
             )
         }
     }

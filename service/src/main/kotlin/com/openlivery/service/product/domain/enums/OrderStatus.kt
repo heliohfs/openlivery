@@ -7,5 +7,6 @@ enum class OrderStatus {
     TIMEOUT,
     ACCEPTED,
     ON_ROUTE,
+    ARRIVED,
     FINISHED
 }

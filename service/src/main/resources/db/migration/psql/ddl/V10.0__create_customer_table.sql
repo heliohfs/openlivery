@@ -13,20 +13,12 @@ create table if not exists customer_data
     identity_number text not null constraint customer_data_identity_number_key unique
 );
 
-create table if not exists customer_applied_discount
+create table if not exists customer_discount_claim
 (
-    customer_identity_number text not null constraint customer_discount_customer_fkey references customer_data(identity_number),
-    campaign_discount_id bigint not null constraint customer_discount_discount_fkey references campaign_discount,
-    application_count bigint not null default 1,
-    constraint customer_discount_pkey primary key(customer_identity_number, campaign_discount_id)
-);
-
-create table if not exists customer_coupon
-(
-    customer_identity_number text not null constraint customer_coupon_customer_fkey references customer_data(identity_number),
-    coupon_code text not null constraint customer_coupon_coupon_code_fkey references coupon,
-    application_count bigint not null default 1,
-    constraint customer_coupon_pkey primary key(customer_identity_number, coupon_code)
+    customer_identity_number text not null constraint customer_discount_claim_customer_fkey references customer_data(identity_number),
+    discount_id bigint not null constraint customer_discount_claim_discount_fkey references discount,
+    claim_count int not null default 1,
+    constraint customer_discount_claim_pkey primary key(customer_identity_number, discount_id)
 );
 
 alter table customer add column if not exists customer_data_id bigint not null constraint customer_customer_data_fkey references customer_data on delete cascade;

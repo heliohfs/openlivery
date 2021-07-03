@@ -1,5 +1,6 @@
 package com.openlivery.service.common.domain.entity
 
+import com.openlivery.service.product.domain.entity.Order
 import javax.persistence.*
 
 @Entity
@@ -23,6 +24,6 @@ data class CustomerData(
     val customer: Customer? = null
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customerData")
-    val appliedDiscounts: Set<AppliedDiscount> = hashSetOf()
+    val ordersPlaced: Set<Order> = hashSetOf()
 
 }

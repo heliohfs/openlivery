@@ -5,13 +5,6 @@ scalar BigDecimal
 scalar BigInteger
 scalar Currency
 
-enum DiscountAccess {
-    COUPON
-    CATALOG
-    FIRST_ORDER
-    ALL_ORDERS
-}
-
 enum DiscountType {
     PERCENT_OFF
     AMOUNT_OFF
@@ -45,6 +38,7 @@ type CustomerData {
     completeName: String
     phoneNumber: String
     identityNumber: String
+#    placedOrders(first: Int!, after: String!): OrderConnection @connection(for: "Order")
 }
 
 type Address {
@@ -128,7 +122,7 @@ type CartProduct {
     finalPrice: Currency!
     amount: Int!
     discountApplied: Boolean!
-    discountSource: DiscountAccess
+    discountSource: String
     discountType: DiscountType
     discount: BigDecimal
     pictureStorageKey: String
@@ -136,13 +130,14 @@ type CartProduct {
 
 type Cart {
     couponApplied: String
-    orderDiscountSource: DiscountAccess
+    orderDiscountSource: String
     orderDiscountType: DiscountType
     orderDiscount: BigDecimal
+    orderValueSaved: BigDecimal
     orderValue: Currency!
     finalOrderValue: Currency!
     orderDiscountApplied: Boolean!
-    deliveryFeeDiscountSource: DiscountAccess
+    deliveryFeeDiscountSource: String
     deliveryFeeDiscountType: DiscountType
     deliveryFeeDiscount: BigDecimal
     deliveryFee: Currency
@@ -151,6 +146,7 @@ type Cart {
     products: [CartProduct]!
     deliveryAddress: CartDeliveryAddress
     finalValue: Currency!
+    orderingAvailable: Boolean!
 }
 
 """
@@ -159,7 +155,6 @@ ORDER
 
 type OrderProduct {
     product: Product!
-    order: Order!
     amount: Int!
     price: Currency!
 }
@@ -171,6 +166,23 @@ type AnonymousOrderInfo {
     customerName: String!
     orderProducts: [OrderProduct]!
     orderValue: Currency!
-    status: OrderStatus
+    status: OrderStatus!
     notes: String
+}
+
+type Order {
+    id: ID!
+    createdDateTime: DateTime!
+    deliveryAddress: Address!
+    notes: String
+    customerData: CustomerData!
+    orderCode: String!
+    orderProducts: [OrderProduct]!
+    deliveryFee: Currency!
+    customerRating: Int
+    customerRatingReason: String
+    status: OrderStatus
+    nonCompletionReason: String
+    couponApplied: String
+    total: Currency
 }

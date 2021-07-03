@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface OrderProductRepository: JpaRepository<OrderProduct, OrderProduct.Key> {
+
+    fun findAllByOrderId(orderId: Long): List<OrderProduct>
+
 }

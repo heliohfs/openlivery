@@ -14,6 +14,9 @@ class Parameters {
     @Id
     val id: Short = 1
 
+    @Column(name = "min_order_value")
+    var minOrderValue: BigDecimal = BigDecimal.ZERO
+
     @Column(name = "min_delivery_fee_value")
     var minDeliveryFeeValue: BigDecimal = BigDecimal.ZERO
 

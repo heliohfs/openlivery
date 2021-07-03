@@ -1,4 +1,4 @@
-package com.openlivery.service.product.resolvers
+package com.openlivery.service.product.resolvers.product
 
 import com.openlivery.service.common.domain.entity.Authority
 import com.openlivery.service.product.domain.input.InsertProductInput

@@ -6,7 +6,7 @@ create table if not exists "order"
     created_date_time timestamp not null default current_timestamp,
     version bigint default 1,
 
-    order_code text not null,
+    order_code text constraint order_code_key unique,
 
     customer_data_id bigint constraint order_customer_data_fkey references customer_data on delete set null,
     deliveryman_id bigint constraint order_deliveryman_user_fkey references "user" on delete set null,
@@ -32,6 +32,7 @@ create table if not exists "order"
             'TIMEOUT',
             'ACCEPTED',
             'ON_ROUTE',
+            'ARRIVED',
             'FINISHED'
         )
     ) default 'PLACED',

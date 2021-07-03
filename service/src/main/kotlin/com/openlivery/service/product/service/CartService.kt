@@ -1,8 +1,9 @@
 package com.openlivery.service.product.service
 
+import com.openlivery.service.common.domain.entity.Customer
 import com.openlivery.service.common.domain.model.AddressInput
 import com.openlivery.service.common.repository.AddressRepository
-import com.openlivery.service.common.repository.AppliedDiscountRepository
+import com.openlivery.service.common.system.SystemParameters
 import com.openlivery.service.product.domain.entity.*
 import com.openlivery.service.product.domain.enums.DiscountType
 import com.openlivery.service.product.repository.CartRepository
@@ -17,51 +18,49 @@ import kotlin.math.max
 @Service
 @Transactional
 class CartService(
+        private val systemParameters: SystemParameters,
         private val cartRepository: CartRepository,
         private val couponRepository: CouponRepository,
         private val discountRepository: DiscountRepository,
         private val catalogProductRepository: CatalogProductRepository,
-        private val appliedDiscountRepository: AppliedDiscountRepository,
-        private val addressRepository: AddressRepository
+        private val addressRepository: AddressRepository,
+        private val discountService: DiscountService
 ) {
 
-    fun findCart(cartId: String) = cartRepository.findById(cartId)
+    fun findCart(cartId: String): Cart = cartRepository.findById(cartId)
             .orElseGet { Cart(cartId) }
 
-    fun getTransientCart(cartId: String) = cartRepository.findById(cartId)
-            .orElseGet { Cart(cartId) }
-            .let { transitCart(it) }
+    fun getTransientCart(cartId: String, customer: Customer?): Cart =
+            cartRepository.findById(cartId)
+                    .orElseGet { Cart(cartId) }
+                    .let { transitCart(it, customer) }
 
-    fun addProductToCart(cartId: String, productId: Long, amount: Int) =
-            catalogProductRepository.findById(productId)
-                    .map { CartProduct(it.base.id, amount) }
-                    .orElseThrow { error("") }
-                    .let { Pair(findCart(cartId), it) }
-                    .also { (cart) -> cart.products.removeIf { it.id == productId } }
-                    .also { (cart, product) -> cart.products.add(product) }.first
-                    .run { cartRepository.save(this) }
-                    .let { transitCart(it) }
+    fun addProductToCart(cartId: String, productId: Long, amount: Int): Cart = catalogProductRepository
+            .findById(productId)
+            .map { CartProduct(it.base.id, amount) }
+            .orElseThrow { error("") }
+            .let { Pair(findCart(cartId), it) }
+            .also { (cart) -> cart.products.removeIf { it.id == productId } }
+            .also { (cart, product) -> cart.products.add(product) }.first
+            .run { cartRepository.save(this) }
 
-
-    fun removeProductFromCart(cartId: String, productId: Long) = findCart(cartId)
+    fun removeProductFromCart(cartId: String, productId: Long): Cart = findCart(cartId)
             .apply { products.removeIf { it.id == productId } }
             .run { cartRepository.save(this) }
-            .let { transitCart(it) }
 
-    fun increaseCartProductAmount(cartId: String, productId: Long, amount: Int) = findCart(cartId)
+    fun increaseCartProductAmount(cartId: String, productId: Long, amount: Int): Cart = findCart(cartId)
             .let { Pair(it, it.products.find { product -> product.id == productId }) }
             .also { (_, product) -> product?.amount?.plus(1) }.first
             .run { cartRepository.save(this) }
-            .let { transitCart(it) }
 
-    fun decreaseCartProductAmount(cartId: String, productId: Long, amount: Int) = findCart(cartId)
+    fun decreaseCartProductAmount(cartId: String, productId: Long, amount: Int): Cart = findCart(cartId)
             .let { Pair(it, it.products.find { product -> product.id == productId }) }
             .also { (_, product) -> max(0, product?.amount?.minus(amount) ?: 0) }
             .also { (cart) -> cart.products.removeIf { it.amount <= 0 } }.first
             .run { cartRepository.save(this) }
-            .let { transitCart(it) }
 
-    fun setCartExistingDeliveryAddress(cartId: String, addressId: Long) = addressRepository.findById(addressId)
+    fun setCartExistingDeliveryAddress(cartId: String, addressId: Long): Cart = addressRepository
+            .findById(addressId)
             .map {
                 CartDeliveryAddress(
                         streetNumber = it.streetNumber,
@@ -78,9 +77,8 @@ class CartService(
             .let { Pair(findCart(cartId), it) }
             .also { (cart, address) -> cart.deliveryAddress = address }.first
             .run { cartRepository.save(this) }
-            .let { transitCart(it) }
 
-    fun setCartNewDeliveryAddress(cartId: String, addressInput: AddressInput) =
+    fun setCartNewDeliveryAddress(cartId: String, addressInput: AddressInput): Cart =
             Pair(findCart(cartId), CartDeliveryAddress(
                     streetNumber = addressInput.streetNumber,
                     streetName = addressInput.streetName,
@@ -93,91 +91,138 @@ class CartService(
             ))
                     .also { (cart, address) -> cart.deliveryAddress = address }.first
                     .run { cartRepository.save(this) }
-                    .let { transitCart(it) }
 
     fun applyCouponToCart(cartId: String, couponCode: String, isAnonymous: Boolean) =
-            couponRepository.findAvailableById(couponCode, isAnonymous)
+            couponRepository.findByCodeAndActiveIsTrue(couponCode)
                     .orElseThrow { error("") }
                     .let { Pair(findCart(cartId), it) }
                     .also { (cart) -> cart.couponApplied = couponCode }.first
                     .run(cartRepository::save)
-                    .let(this::transitCart)
 
-    fun removeCouponFromCart(cartId: String) = findCart(cartId)
+    fun removeCouponFromCart(cartId: String): Cart = findCart(cartId)
             .apply { couponApplied = null }
             .run(cartRepository::save)
-            .let(this::transitCart)
 
-    fun clearCart(cartId: String) = findCart(cartId)
+    fun clearCart(cartId: String): Cart = findCart(cartId)
             .apply { products = hashSetOf() }
             .apply { couponApplied = null }
             .run(cartRepository::save)
-            .let(this::transitCart)
 
-    fun transitCart(cart: Cart): Cart {
-        cart.couponApplied?.let { code ->
-            couponRepository.findById(code)
-                    .ifPresentOrElse({ coupon ->
-                        coupon.discounts.forEach { discount ->
-                            when (discount) {
-                                is OrderDiscount -> cart.apply {
-                                    orderDiscount = discount.discount
-                                    orderDiscountApplied = true
-                                    orderDiscountSource = discount.accessBy
-                                    orderDiscountType = discount.discountType
-                                }
-                                is DeliveryFeeDiscount -> cart.apply {
-                                    deliveryFeeDiscount = discount.discount
-                                    deliveryFeeDiscountApplied = true
-                                    deliveryFeeDiscountSource = discount.accessBy
-                                    deliveryFeeDiscountType = discount.discountType
-                                }
-                                else -> cart.products.forEach {
-                                    if (it.id == (discount as ProductDiscount).product.id) {
-                                        it.discount = discount.discount
-                                        it.discountApplied = true
-                                        it.discountSource = discount.accessBy
-                                        it.discountType = discount.discountType
-                                    }
-                                }
-                            }
-                        }
-                    }, { cart.couponApplied = null })
+    //TODO: optimize
+    fun transitCart(cart: Cart, customer: Customer?): Cart {
+        cart.products.forEach { cartProduct ->
+            catalogProductRepository.findById(cartProduct.id).ifPresentOrElse({
+                cartProduct.apply {
+                    discountType = it.discountType
+                    discount = it.discount
+                    discountId = it.discountId
+                    discountApplied = true
+                    finalPrice = it.finalPrice
+                    basePrice = it.basePrice
+                    discountSource = it.discountSource
+                    pictureStorageKey = it.pictureStorageKey
+                }
+                cart.orderValue = cart.orderValue.add(cartProduct.finalPrice.multiply(BigDecimal(cartProduct.amount)))
+            }, {
+                cart.products.removeIf { product -> product.id == cartProduct.id }
+                cartRepository.save(cart)
+            })
         }
 
-        cart.products.forEach { cartProduct ->
-            catalogProductRepository.findById(cartProduct.id)
-                    .ifPresentOrElse({ product ->
-                        when (cartProduct.discountType) {
-                            DiscountType.PERCENT_OFF ->
-                                cartProduct.finalPrice = product.finalPrice.subtract(product.finalPrice.multiply(cartProduct.discount))
-                            DiscountType.AMOUNT_OFF ->
-                                cartProduct.finalPrice = product.finalPrice.subtract(cartProduct.discount)
-                            else ->
-                                cartProduct.finalPrice = product.finalPrice
+        cart.finalOrderValue = cart.orderValue
+        cart.finalDeliveryFee = cart.deliveryFee
+
+        val couponDiscounts = cart.couponApplied?.let {
+            discountService.findMatchingDiscountsByCouponCode(
+                    couponCode = it,
+                    orderValue = cart.orderValue,
+                    deliveryFee = cart.deliveryFee,
+                    customer = customer
+            ).ifEmpty {
+                cart.couponApplied = null
+                cartRepository.save(cart)
+                throw error("Invalid coupon")
+            }
+        } ?: listOf()
+
+        val underlyingDiscounts = discountService.findMatchingUnderlyingDiscounts(
+                customer = customer,
+                orderValue = cart.orderValue,
+                deliveryFee = cart.deliveryFee
+        )
+
+        val discounts = underlyingDiscounts.union(couponDiscounts)
+
+        discounts.filter { it.isProductDiscount }.forEach { discount ->
+            cart.products.find { it.id == discount.productId }
+                    ?.apply {
+                        val finalValue = if (discount.discountType == DiscountType.AMOUNT_OFF) basePrice.subtract(discount.discount)
+                        else basePrice.subtract(basePrice.multiply(discount.discount))
+
+                        if (finalValue.compareTo(finalPrice) == -1) {
+                            val difference = finalPrice.subtract(finalValue).multiply(BigDecimal(amount))
+                            cart.orderValue = cart.orderValue.subtract(difference)
+                            cart.finalOrderValue = cart.finalOrderValue.subtract(difference)
+
+                            this.discount = discount.discount
+                            discountApplied = true
+                            discountId = discount.id
+                            discountType = discount.discountType
+                            discountSource = discount.campaign.description
+                            finalPrice = finalValue
                         }
-                        cartProduct.basePrice = product.basePrice
-                        cartProduct.pictureStorageKey = product.pictureStorageKey
-                        cart.orderValue = cart.orderValue.add(cartProduct.finalPrice.multiply(BigDecimal(cartProduct.amount)))
-                    }) {
-                        cart.products.removeIf { product -> product.id == cartProduct.id }
-                        cartRepository.save(cart)
                     }
         }
 
-        cart.finalOrderValue = cart.orderDiscount?.let { discount ->
-            if (cart.orderDiscountType == DiscountType.PERCENT_OFF)
-                cart.orderValue.subtract(cart.orderValue.multiply(discount))
-            else cart.orderValue.subtract(cart.orderDiscount)
-        } ?: cart.orderValue
+        discounts.filter { !it.isProductDiscount }.forEach { discount ->
+            if (discount.isOrderDiscount) {
+                cart.apply {
+                    val saved = if (discount.discountType === DiscountType.AMOUNT_OFF) discount.discount
+                    else discount.maxOrderDiscountValue?.let {
+                        val discountAmount = orderValue.multiply(discount.discount)
+                        if (discountAmount.compareTo(it) == -1) discountAmount
+                        else discount.maxOrderDiscountValue
+                    } ?: orderValue.multiply(discount.discount)
 
-        cart.finalDeliveryFee = cart.deliveryFeeDiscount?.let { discount ->
-            if (cart.deliveryFeeDiscountType == DiscountType.PERCENT_OFF)
-                cart.deliveryFee?.subtract((cart.deliveryFee ?: BigDecimal.ZERO).multiply(discount))
-            else cart.deliveryFee?.subtract(cart.deliveryFeeDiscount ?: BigDecimal.ZERO)
-        } ?: cart.deliveryFee
+                    val finalValue = orderValue.subtract(saved)
+
+                    if (finalValue.compareTo(finalOrderValue) == -1) {
+                        orderDiscount = discount.discount
+                        orderDiscountApplied = true
+                        orderDiscountId = discount.id
+                        orderDiscountType = discount.discountType
+                        orderValueSaved = saved
+                        orderDiscountSource = discount.campaign.description
+                        finalOrderValue = finalValue
+                    }
+                }
+            } else {
+                cart.apply {
+                    deliveryFee?.let { deliveryFee ->
+                        val finalValue = if (discount.discountType == DiscountType.AMOUNT_OFF) deliveryFee.subtract(discount.discount)
+                        else deliveryFee.subtract(deliveryFee.multiply(discount.discount))
+
+                        if (finalValue.compareTo(finalOrderValue) == -1) {
+                            deliveryFeeDiscount = discount.discount
+                            deliveryFeeDiscountApplied = true
+                            deliveryFeeDiscountId = discount.id
+                            deliveryFeeDiscountType = discount.discountType
+                            deliveryFeeDiscountSource = discount.campaign.description
+                            finalDeliveryFee = finalValue
+                        }
+                    }
+                }
+            }
+        }
 
         cart.finalValue = cart.finalOrderValue.add(cart.finalDeliveryFee ?: BigDecimal.ZERO)
+
+        val parameters = systemParameters.getParameters()
+
+        cart.orderingAvailable = (parameters.minOrderValue.compareTo(cart.finalOrderValue) <= 0) &&
+                cart.deliveryAddress != null &&
+                cart.deliveryFee != null
+
 
         return cart
     }

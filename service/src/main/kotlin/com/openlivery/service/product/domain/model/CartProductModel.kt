@@ -11,7 +11,7 @@ class CartProductModel private constructor(
         val finalPrice: BigDecimal,
         val amount: Int,
         val discountApplied: Boolean,
-        val discountSource: DiscountAccess?,
+        val discountSource: String?,
         val discountType: DiscountType?,
         val discount: BigDecimal?,
         val pictureStorageKey: String?

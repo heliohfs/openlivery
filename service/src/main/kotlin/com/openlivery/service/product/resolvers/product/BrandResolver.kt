@@ -1,9 +1,9 @@
-package com.openlivery.service.product.resolvers
+package com.openlivery.service.product.resolvers.product
 
 import com.openlivery.service.common.domain.entity.Authority
 import com.openlivery.service.product.domain.model.BrandModel
 import com.openlivery.service.product.domain.model.ProductModel
-import com.openlivery.service.product.service.ProductQueryService
+import com.openlivery.service.product.service.ProductService
 import graphql.kickstart.tools.GraphQLResolver
 import graphql.relay.Connection
 import graphql.relay.SimpleListConnection
@@ -13,12 +13,12 @@ import org.springframework.stereotype.Component
 
 @Component
 class BrandResolver(
-        private val productQueryService: ProductQueryService
+        private val productService: ProductService
 ) : GraphQLResolver<BrandModel> {
 
     @PreAuthorize("hasAuthority('${Authority.READ_PRODUCTS}')")
     fun products(brandModel: BrandModel, first: Int, after: String, env: DataFetchingEnvironment): Connection<ProductModel> {
-        return productQueryService.findProductsByCategoryId(brandModel.id)
+        return productService.findProductsByCategoryId(brandModel.id)
                 .map { ProductModel.from(it) }
                 .let { SimpleListConnection(it).get(env) }
     }

@@ -11,7 +11,7 @@ abstract class BaseProduct(
 
         @Column(name = "base_price")
         var basePrice: BigDecimal
-): BaseEntity() {
+) : BaseEntity() {
 
     @Column(name = "description")
     var description: String? = null
@@ -33,5 +33,8 @@ abstract class BaseProduct(
             inverseJoinColumns = [JoinColumn(name = "category_id")]
     )
     var categories: MutableSet<Category> = mutableSetOf()
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "productId")
+    var availableDiscounts: MutableSet<UnderlyingDiscount> = hashSetOf()
 
 }

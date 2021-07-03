@@ -9,13 +9,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface DiscountRepository: JpaRepository<Discount, Long> {
 
-    @Query("""
-        select discount
-        from Discount discount
-            join discount.campaign campaign
-        where discount.accessBy = :accessBy and
-            current_timestamp between campaign.startDateTime and campaign.endDateTime
-    """)
-    fun findActiveDiscountsByAccessBy(accessBy: DiscountAccess): List<Discount>
+    fun findAllByCouponCodeAndCouponActiveIsTrueAndActiveIsTrue(couponCode: String): List<Discount>
 
 }

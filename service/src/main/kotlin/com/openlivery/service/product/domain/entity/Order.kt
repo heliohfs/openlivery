@@ -7,6 +7,7 @@ import com.openlivery.service.product.domain.enums.OrderNonCompletionReason
 import com.openlivery.service.product.domain.enums.OrderStatus
 import java.math.BigDecimal
 import javax.persistence.*
+import kotlin.jvm.Transient
 
 @Entity
 @Table(name = "\"order\"")
@@ -20,10 +21,17 @@ data class Order(
 
         @ManyToOne(cascade = [CascadeType.PERSIST, CascadeType.MERGE])
         @JoinColumn(name = "customer_data_id")
-        val customerData: CustomerData
+        val customerData: CustomerData,
+
+        @Column(name = "order_code")
+        var orderCode: String?
 ) : BaseEntity() {
 
-    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "orderId")
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = [CascadeType.ALL],
+            mappedBy = "order"
+    )
     var orderProducts: MutableSet<OrderProduct> = mutableSetOf()
 
     @Column(name = "delivery_fee")
@@ -49,7 +57,7 @@ data class Order(
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    var status: OrderStatus? = OrderStatus.PLACED
+    var status: OrderStatus = OrderStatus.PLACED
 
     @Column(name = "non_completion_reason")
     @Enumerated(EnumType.STRING)
@@ -57,5 +65,20 @@ data class Order(
 
     @Column(name = "coupon_applied")
     var couponApplied: String? = null
+
+    @Transient
+    var total: BigDecimal = BigDecimal.ZERO
+        private set
+        get() = orderProducts.fold(BigDecimal.ZERO, { total, it -> total.add(it.price.multiply(BigDecimal(it.amount))) }).add(deliveryFee)
+
+    @Transient
+    var codeAvailable: Boolean = true
+        private set
+        get() = listOf(
+                OrderStatus.CANCELED,
+                OrderStatus.FINISHED,
+                OrderStatus.TIMEOUT,
+                OrderStatus.INCOMPLETE
+        ).contains(status)
 
 }

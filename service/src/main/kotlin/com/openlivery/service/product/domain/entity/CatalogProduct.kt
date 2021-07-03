@@ -16,13 +16,19 @@ class CatalogProduct private constructor(
         @Column(name = "final_price")
         val finalPrice: BigDecimal,
 
-        @Column(name = "discount_type")
-        @Enumerated(EnumType.STRING)
-        val discountType: DiscountType,
-
-        @Column(name = "discount")
-        val discount: BigDecimal,
-
         @Column(name = "discount_applied")
         val discountApplied: Boolean,
+
+        @Column(name = "discount_type")
+        @Enumerated(EnumType.STRING)
+        val discountType: DiscountType? = null,
+
+        @Column(name = "discount")
+        val discount: BigDecimal? = null,
+
+        @Column(name = "discount_id")
+        val discountId: Long? = null,
+
+        @Column(name = "discount_source")
+        val discountSource: String? = null
 ): BaseProduct(name, basePrice)

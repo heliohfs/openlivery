@@ -10,6 +10,6 @@ type Query {
 
     cart: Cart
 
-    orderById(id: ID!): Order
-    placedOrders(first: Int!, after: String!): [Order]
+    orderByCode(code: String): AnonymousOrderInfo
+
 }

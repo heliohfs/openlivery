@@ -105,6 +105,7 @@ input PlaceOrderInput {
 
 input PlaceAnonymousOrderInput {
     completeName: String!
+    phoneNumber: String!
     identityNumber: String!
     notes: String
 }

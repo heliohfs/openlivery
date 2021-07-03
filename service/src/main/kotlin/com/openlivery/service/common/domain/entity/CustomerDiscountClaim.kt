@@ -4,28 +4,28 @@ import java.io.Serializable
 import javax.persistence.*
 
 @Entity
-@Table(name = "customer_coupon")
-@IdClass(CustomerCoupon.Key::class)
-class CustomerCoupon(
+@Table(name = "customer_discount_claim")
+@IdClass(CustomerDiscountClaim.Key::class)
+class CustomerDiscountClaim(
         @Id
         @Column(name = "customer_identity_number")
         val customerIdentityNumber: String,
 
         @Id
-        @Column(name = "coupon_code")
-        val couponCode: String,
+        @Column(name = "discount_id")
+        val discountId: Long,
 
-        @Column(name = "application_count")
-        var applicationCount: Long = 0
+        @Column(name = "claim_count")
+        var count: Int = 0
 ) {
 
     class Key() : Serializable {
         var customerIdentityNumber: String = ""
-        var couponCode: String = ""
+        var discountId: Long = -1
 
-        constructor(customerIdentityNumber: String, couponCode: String) : this() {
+        constructor(customerIdentityNumber: String, discountId: Long) : this() {
             this.customerIdentityNumber = customerIdentityNumber
-            this.couponCode = couponCode
+            this.discountId = discountId
         }
 
         override fun equals(other: Any?): Boolean {
@@ -35,14 +35,14 @@ class CustomerCoupon(
             other as Key
 
             if (customerIdentityNumber != other.customerIdentityNumber) return false
-            if (couponCode != other.couponCode) return false
+            if (discountId != other.discountId) return false
 
             return true
         }
 
         override fun hashCode(): Int {
             var result = customerIdentityNumber.hashCode()
-            result = 31 * result + couponCode.hashCode()
+            result = 31 * result + discountId.hashCode()
             return result
         }
 

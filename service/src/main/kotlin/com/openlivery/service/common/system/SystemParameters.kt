@@ -15,6 +15,12 @@ class SystemParameters(
     fun getParameters(): Parameters = repository.findById(1)
             .orElse(Parameters())
 
+    fun setMinOrderValue(value: BigDecimal): Parameters {
+        val parameters = getParameters()
+        parameters.minOrderValue = value
+        return repository.save(parameters)
+    }
+
     fun setMinDeliveryFeeValue(value: BigDecimal): Parameters {
         val parameters = getParameters()
         parameters.minDeliveryFeeValue = value

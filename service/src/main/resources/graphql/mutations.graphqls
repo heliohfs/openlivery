@@ -22,6 +22,7 @@ type Mutation {
     removeCoupon: Cart
     clearCart: Cart
 
+    placeAnonymousOrder(input: PlaceAnonymousOrderInput): AnonymousOrderInfo
     placeOrder(notes: String): Order
 
 }

@@ -1,6 +1,5 @@
 package com.openlivery.service.product.domain.entity
 
-import com.openlivery.service.product.domain.enums.DiscountAccess
 import com.openlivery.service.product.domain.enums.DiscountType
 import java.io.Serializable
 import java.math.BigDecimal
@@ -18,10 +17,13 @@ class CartProduct(
     var finalPrice: BigDecimal = BigDecimal.ZERO
 
     @Transient
+    var discountSource: String? = null
+
+    @Transient
     var discountApplied: Boolean = false
 
     @Transient
-    var discountSource: DiscountAccess? = null
+    var discountId: Long? = null
 
     @Transient
     var discountType: DiscountType? = null

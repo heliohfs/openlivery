@@ -1,6 +1,5 @@
 package com.openlivery.service.product.domain.entity
 
-import com.openlivery.service.product.domain.enums.DiscountAccess
 import com.openlivery.service.product.domain.enums.DiscountType
 import org.springframework.data.redis.core.RedisHash
 import java.io.Serializable
@@ -18,7 +17,10 @@ data class Cart(
     var couponApplied: String? = null
 
     @Transient
-    var orderDiscountSource: DiscountAccess? = null
+    var orderDiscountSource: String? = null
+
+    @Transient
+    var orderDiscountId: Long? = null
 
     @Transient
     var orderDiscountType: DiscountType? = null
@@ -30,13 +32,19 @@ data class Cart(
     var orderValue: BigDecimal = BigDecimal.ZERO
 
     @Transient
+    var orderValueSaved: BigDecimal? = null
+
+    @Transient
     var finalOrderValue: BigDecimal = BigDecimal.ZERO
 
     @Transient
     var orderDiscountApplied: Boolean = false
 
     @Transient
-    var deliveryFeeDiscountSource: DiscountAccess? = null
+    var deliveryFeeDiscountSource: String? = null
+
+    @Transient
+    var deliveryFeeDiscountId: Long? = null
 
     @Transient
     var deliveryFeeDiscountType: DiscountType? = null
@@ -55,5 +63,8 @@ data class Cart(
 
     @Transient
     var finalValue: BigDecimal = BigDecimal.ZERO
+
+    @Transient
+    var orderingAvailable: Boolean = false
 
 }
