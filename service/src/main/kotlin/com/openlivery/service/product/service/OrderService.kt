@@ -5,6 +5,7 @@ import com.openlivery.service.common.domain.entity.CustomerData
 import com.openlivery.service.common.repository.AddressRepository
 import com.openlivery.service.common.repository.CustomerDataRepository
 import com.openlivery.service.common.system.SystemParameters
+import com.openlivery.service.product.domain.entity.Cart
 import com.openlivery.service.product.domain.entity.Order
 import com.openlivery.service.product.domain.entity.OrderProduct
 import com.openlivery.service.product.domain.enums.OrderStatus
@@ -39,14 +40,22 @@ class OrderService(
     fun findOrderByCode(code: String) =
             orderRepository.findByOrderCode(code)
 
-    fun createAnonymousOrder(cartId: String, customerName: String, phoneNumber: String, customerIdentityNumber: String, notes: String?) =
-            customerDataRepository.findByIdentityNumber(customerIdentityNumber)
-                    .orElseGet { customerDataRepository.save(CustomerData(customerName, phoneNumber, customerIdentityNumber)) }
-                    .let { createOrder(cartId, it, notes) }
+    fun createAnonymousOrder(cartId: String, customerName: String, phoneNumber: String, customerIdentityNumber: String, notes: String?): Order {
+        val cart = cartService.getTransientCart(cartId, null)
+                .takeIf { it.orderingAvailable } ?: throw error("")
+        val customerData = customerDataRepository.findByIdentityNumber(customerIdentityNumber)
+                .orElseGet { customerDataRepository.save(CustomerData(customerName, phoneNumber, customerIdentityNumber)) }
+        return createOrder(cart, customerData, notes)
+    }
 
-    //TODO: handle order placement requirements
-    fun createOrder(cartId: String, customerData: CustomerData, notes: String?): Order {
-        val cart = cartService.getTransientCart(cartId, customerData.customer)
+    fun createAuthenticatedOrder(cartId: String, customerData: CustomerData, notes: String?): Order {
+        val cart = cartService.getTransientCart(cartId, null)
+                .takeIf { it.orderingAvailable } ?: throw error("")
+        return createOrder(cart, customerData, notes)
+    }
+
+    fun createOrder(cart: Cart, customerData: CustomerData, notes: String?): Order {
+        if (!cart.orderingAvailable) throw error("")
 
         val address = cart.deliveryAddress?.run {
             Address(streetName = streetName,
@@ -81,7 +90,7 @@ class OrderService(
                     }
                 }
                 .run(orderRepository::save)
-                .apply { cartService.clearCart(cartId) }
+                .apply { cartService.clearCart(cart.id) }
     }
 
     fun findOrderById(id: Long): Optional<Order> {
@@ -93,11 +102,12 @@ class OrderService(
     }
 
     private fun generateCode(): String {
+        val allowedChars = ('A'..'Z') + ('0'..'9') + ('a'..'z')
         var code: String?
         var tries = 0
         do {
             tries++
-            code = getRandomString(8)
+            code = (1..8).map { allowedChars.random() }.joinToString("")
             orderRepository.findByOrderCode(code)
                     .ifPresent { order ->
                         if (order.codeAvailable) {
@@ -108,13 +118,6 @@ class OrderService(
         } while (code == null && tries < 10)
         if (code == null) throw error("")
         return code!!
-    }
-
-    private fun getRandomString(length: Int): String {
-        val allowedChars = ('A'..'Z') + ('0'..'9') + ('a'..'z')
-        return (1..length)
-                .map { allowedChars.random() }
-                .joinToString("")
     }
 
 }

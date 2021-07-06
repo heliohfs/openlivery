@@ -74,29 +74,48 @@ insert into product_category(product_id, category_id) values
 
 insert into discount(
 	campaign_id,
-	apply_to,
-	discount_type,
-	discount,
+	kind,
+	discount
+) values
+	(1, 'PERCENT_OFF', 0.1),
+	(1, 'PERCENT_OFF', 0.2),
+	(1, 'PERCENT_OFF', 0.3),
+	(1, 'PERCENT_OFF', 0.4),
+	(1, 'PERCENT_OFF', 0.5),
+	(2, 'PERCENT_OFF', 0.6),
+	(2, 'PERCENT_OFF', 0.7),
+	(2, 'PERCENT_OFF', 0.8),
+	(2, 'PERCENT_OFF', 0.9),
+	(2, 'PERCENT_OFF', 0.10),
+	(3, 'PERCENT_OFF', 0.11),
+	(3, 'PERCENT_OFF', 0.12),
+	(3, 'PERCENT_OFF', 0.13),
+	(3, 'PERCENT_OFF', 0.14),
+	(3, 'PERCENT_OFF', 0.15),
+	(3, 'PERCENT_OFF', 0.16),
+	(3, 'PERCENT_OFF', 0.17);
+
+insert into product_discount(
+	discount_id,
 	product_id
 ) values
-	(1, 'PRODUCT', 'PERCENT_OFF', 0.1, 1),
-	(1, 'PRODUCT', 'PERCENT_OFF', 0.2, 2),
-	(1, 'PRODUCT', 'PERCENT_OFF', 0.3, 3),
-	(1, 'PRODUCT', 'PERCENT_OFF', 0.4, 4),
-	(1, 'PRODUCT', 'PERCENT_OFF', 0.5, 5),
-	(2, 'PRODUCT', 'PERCENT_OFF', 0.6, 6),
-	(2, 'PRODUCT', 'PERCENT_OFF', 0.7, 7),
-	(2, 'PRODUCT', 'PERCENT_OFF', 0.8, 8),
-	(2, 'PRODUCT', 'PERCENT_OFF', 0.9, 9),
-	(2, 'PRODUCT', 'PERCENT_OFF', 0.10, 10),
-	(3, 'PRODUCT', 'PERCENT_OFF', 0.11, 11),
-	(3, 'PRODUCT', 'PERCENT_OFF', 0.12, 12),
-	(3, 'PRODUCT', 'PERCENT_OFF', 0.13, 13),
-	(3, 'PRODUCT', 'PERCENT_OFF', 0.14, 14),
-	(3, 'PRODUCT', 'PERCENT_OFF', 0.15, 15),
-	(3, 'PRODUCT', 'PERCENT_OFF', 0.16, 16),
-	(3, 'PRODUCT', 'PERCENT_OFF', 0.17, 17);
-
+	(1, 1),
+	(2, 2),
+	(3, 3),
+	(4, 4),
+	(5, 5),
+	(6, 6),
+	(7, 7),
+	(8, 8),
+	(9, 9),
+	(10,10),
+	(11,11),
+	(12,12),
+	(13,13),
+	(14,14),
+	(15,15),
+	(16,16),
+	(17,17);
 
 
 insert into distributor(

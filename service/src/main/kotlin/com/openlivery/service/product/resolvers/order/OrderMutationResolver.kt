@@ -31,7 +31,7 @@ class OrderMutationResolver(
     fun placeOrder(notes: String?): OrderModel {
         if (auth.user !is Customer) throw error("")
         val customer = auth.user as Customer
-        return orderService.createOrder(auth.id, customer.data, notes)
+        return orderService.createAuthenticatedOrder(auth.id, customer.data, notes)
                 .let { OrderModel.from(it) }
     }
 

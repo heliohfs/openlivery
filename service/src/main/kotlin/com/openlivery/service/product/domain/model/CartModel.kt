@@ -2,7 +2,6 @@ package com.openlivery.service.product.domain.model
 
 import com.openlivery.service.product.domain.entity.Cart
 import com.openlivery.service.product.domain.entity.CartDeliveryAddress
-import com.openlivery.service.product.domain.enums.DiscountAccess
 import com.openlivery.service.product.domain.enums.DiscountType
 import java.math.BigDecimal
 
@@ -23,7 +22,7 @@ class CartModel private constructor(
         val deliveryFeeDiscountApplied: Boolean,
         val products: List<CartProductModel>,
         val deliveryAddress: CartDeliveryAddress?,
-        val finalValue: BigDecimal,
+        val finalValue: BigDecimal?,
         val orderingAvailable: Boolean
 ) {
 
@@ -31,19 +30,19 @@ class CartModel private constructor(
         fun from(cart: Cart): CartModel {
             return CartModel(
                     couponApplied = cart.couponApplied,
-                    orderDiscountSource = cart.orderDiscountSource,
-                    orderDiscountType = cart.orderDiscountType,
-                    orderDiscount = cart.orderDiscount,
-                    orderValueSaved = cart.orderValueSaved,
+                    orderDiscountSource = cart.orderDiscount?.campaign?.description,
+                    orderDiscountType = cart.orderDiscount?.kind,
+                    orderDiscount = cart.orderDiscount?.discount,
+                    orderValueSaved = cart.orderValue.minus(cart.finalOrderValue),
                     orderValue = cart.orderValue,
                     finalOrderValue = cart.finalOrderValue,
-                    orderDiscountApplied = cart.orderDiscountApplied,
-                    deliveryFeeDiscountSource = cart.deliveryFeeDiscountSource,
-                    deliveryFeeDiscountType = cart.deliveryFeeDiscountType,
-                    deliveryFeeDiscount = cart.deliveryFeeDiscount,
+                    orderDiscountApplied = cart.orderDiscount != null,
+                    deliveryFeeDiscountSource = cart.deliveryFeeDiscount?.campaign?.description,
+                    deliveryFeeDiscountType = cart.deliveryFeeDiscount?.kind,
+                    deliveryFeeDiscount = cart.deliveryFeeDiscount?.discount,
                     deliveryFee = cart.deliveryFee,
                     finalDeliveryFee = cart.finalDeliveryFee,
-                    deliveryFeeDiscountApplied = cart.deliveryFeeDiscountApplied,
+                    deliveryFeeDiscountApplied = cart.deliveryFeeDiscount != null,
                     products = cart.products.map { CartProductModel.from(it) },
                     deliveryAddress = cart.deliveryAddress,
                     finalValue = cart.finalValue,

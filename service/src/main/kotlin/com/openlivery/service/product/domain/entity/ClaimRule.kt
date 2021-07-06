@@ -6,12 +6,15 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "claim_rule")
-class DiscountClaimRule(
+class ClaimRule(
         @Column(name = "claim_limit")
         var claimLimit: Int? = null,
 
         @Column(name = "claim_limit_by_user")
         var claimLimitByUser: Int? = null,
+
+        @Column(name = "claim_count")
+        var claimCount: Int? = null,
 
         @Column(name = "order_value_at_least")
         var orderValueAtLeast: BigDecimal? = null,
@@ -45,7 +48,7 @@ class DiscountClaimRule(
     @Transient
     val base = object : Base() {
         override val id: Long
-            get() = this@DiscountClaimRule.id ?: throw IllegalEntityException()
+            get() = this@ClaimRule.id ?: throw IllegalEntityException()
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "claimRule")

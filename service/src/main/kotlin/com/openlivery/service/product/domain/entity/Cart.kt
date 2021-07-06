@@ -1,6 +1,5 @@
 package com.openlivery.service.product.domain.entity
 
-import com.openlivery.service.product.domain.enums.DiscountType
 import org.springframework.data.redis.core.RedisHash
 import java.io.Serializable
 import java.math.BigDecimal
@@ -8,61 +7,33 @@ import java.math.BigDecimal
 @RedisHash
 data class Cart(
         val id: String,
+        var products: MutableSet<CartProduct> = hashSetOf(),
+        var deliveryAddress: CartDeliveryAddress? = null,
+        var couponApplied: String? = null
 ) : Serializable {
 
-    var products: MutableSet<CartProduct> = hashSetOf()
+    val orderValue: BigDecimal
+        get() = products.fold(BigDecimal.ZERO) { total, product ->
+            total.add(product.finalPrice.multiply(BigDecimal(product.amount)))
+        }
 
-    var deliveryAddress: CartDeliveryAddress? = null
+    val finalOrderValue: BigDecimal
+        get() = orderDiscount?.applyTo(orderValue) ?: orderValue
 
-    var couponApplied: String? = null
+    val finalDeliveryFee: BigDecimal?
+        get() = deliveryFee?.let { deliveryFeeDiscount?.applyTo(it) }
 
-    @Transient
-    var orderDiscountSource: String? = null
-
-    @Transient
-    var orderDiscountId: Long? = null
-
-    @Transient
-    var orderDiscountType: DiscountType? = null
-
-    @Transient
-    var orderDiscount: BigDecimal? = null
-
-    @Transient
-    var orderValue: BigDecimal = BigDecimal.ZERO
-
-    @Transient
-    var orderValueSaved: BigDecimal? = null
-
-    @Transient
-    var finalOrderValue: BigDecimal = BigDecimal.ZERO
-
-    @Transient
-    var orderDiscountApplied: Boolean = false
-
-    @Transient
-    var deliveryFeeDiscountSource: String? = null
-
-    @Transient
-    var deliveryFeeDiscountId: Long? = null
-
-    @Transient
-    var deliveryFeeDiscountType: DiscountType? = null
-
-    @Transient
-    var deliveryFeeDiscount: BigDecimal? = null
+    val finalValue: BigDecimal?
+        get() = finalDeliveryFee?.add(finalOrderValue)
 
     @Transient
     var deliveryFee: BigDecimal? = null
 
     @Transient
-    var finalDeliveryFee: BigDecimal? = null
+    var orderDiscount: OrderDiscount? = null
 
     @Transient
-    var deliveryFeeDiscountApplied: Boolean = false
-
-    @Transient
-    var finalValue: BigDecimal = BigDecimal.ZERO
+    var deliveryFeeDiscount: DeliveryFeeDiscount? = null
 
     @Transient
     var orderingAvailable: Boolean = false

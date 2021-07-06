@@ -2,7 +2,6 @@ package com.openlivery.service.product.resolvers.product
 
 import com.openlivery.service.common.domain.entity.Authority.Companion.READ_PRODUCTS
 import com.openlivery.service.product.domain.model.BrandModel
-import com.openlivery.service.product.domain.model.CatalogProductModel
 import com.openlivery.service.product.domain.model.CategoryModel
 import com.openlivery.service.product.domain.model.ProductModel
 import com.openlivery.service.product.service.ProductService
@@ -47,13 +46,6 @@ class ProductQueryResolver(
     }
 
     @PreAuthorize("permitAll()")
-    fun catalog(first: Int, after: String, env: DataFetchingEnvironment): Connection<CatalogProductModel> {
-        return productService.findAllCatalogProducts()
-                .map { CatalogProductModel.from(it) }
-                .let { SimpleListConnection(it).get(env) }
-    }
-
-    @PreAuthorize("permitAll()")
     fun categoryById(id: Long, env: DataFetchingEnvironment): CategoryModel {
         return productService.findCategoryById(id)
                 .orElseThrow { error("") }
@@ -65,13 +57,6 @@ class ProductQueryResolver(
         return productService.findBrandById(id)
                 .orElseThrow { error("") }
                 .let { BrandModel.from(it) }
-    }
-
-    @PreAuthorize("permitAll()")
-    fun catalogProductById(id: Long, env: DataFetchingEnvironment): CatalogProductModel {
-        return productService.findCatalogProductById(id)
-                .orElseThrow { error("") }
-                .let { CatalogProductModel.from(it) }
     }
 
 }

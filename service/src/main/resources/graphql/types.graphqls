@@ -86,21 +86,6 @@ type Product {
     categories: [Category]!
 }
 
-type CatalogProduct {
-    id: ID!
-    name: String!
-    description: String
-    itemCode: String
-    pictureStorageKey: String
-    brand: Brand
-    categories: [Category]!
-    basePrice: Currency!
-    finalPrice: Currency!
-    discountType: DiscountType
-    discount: BigDecimal
-    discountApplied: Boolean!
-}
-
 """
 CART
 """
@@ -145,7 +130,7 @@ type Cart {
     deliveryFeeDiscountApplied: Boolean!
     products: [CartProduct]!
     deliveryAddress: CartDeliveryAddress
-    finalValue: Currency!
+    finalValue: Currency
     orderingAvailable: Boolean!
 }
 

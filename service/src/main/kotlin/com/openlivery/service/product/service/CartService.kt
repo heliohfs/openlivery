@@ -5,26 +5,23 @@ import com.openlivery.service.common.domain.model.AddressInput
 import com.openlivery.service.common.repository.AddressRepository
 import com.openlivery.service.common.system.SystemParameters
 import com.openlivery.service.product.domain.entity.*
-import com.openlivery.service.product.domain.enums.DiscountType
 import com.openlivery.service.product.repository.CartRepository
-import com.openlivery.service.product.repository.CatalogProductRepository
 import com.openlivery.service.product.repository.CouponRepository
 import com.openlivery.service.product.repository.DiscountRepository
+import com.openlivery.service.product.repository.ProductRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.math.BigDecimal
 import kotlin.math.max
 
 @Service
 @Transactional
 class CartService(
+        private val productRepository: ProductRepository,
         private val systemParameters: SystemParameters,
         private val cartRepository: CartRepository,
         private val couponRepository: CouponRepository,
-        private val discountRepository: DiscountRepository,
-        private val catalogProductRepository: CatalogProductRepository,
         private val addressRepository: AddressRepository,
-        private val discountService: DiscountService
+        private val discountRepository: DiscountRepository,
 ) {
 
     fun findCart(cartId: String): Cart = cartRepository.findById(cartId)
@@ -35,7 +32,7 @@ class CartService(
                     .orElseGet { Cart(cartId) }
                     .let { transitCart(it, customer) }
 
-    fun addProductToCart(cartId: String, productId: Long, amount: Int): Cart = catalogProductRepository
+    fun addProductToCart(cartId: String, productId: Long, amount: Int): Cart = productRepository
             .findById(productId)
             .map { CartProduct(it.base.id, amount) }
             .orElseThrow { error("") }
@@ -108,121 +105,59 @@ class CartService(
             .apply { couponApplied = null }
             .run(cartRepository::save)
 
-    //TODO: optimize
     fun transitCart(cart: Cart, customer: Customer?): Cart {
-        cart.products.forEach { cartProduct ->
-            catalogProductRepository.findById(cartProduct.id).ifPresentOrElse({
+        val products = cart.products.mapNotNullTo(hashSetOf()) { cartProduct ->
+            productRepository.findById(cartProduct.id).map { product ->
                 cartProduct.apply {
-                    discountType = it.discountType
-                    discount = it.discount
-                    discountId = it.discountId
-                    discountApplied = true
-                    finalPrice = it.finalPrice
-                    basePrice = it.basePrice
-                    discountSource = it.discountSource
-                    pictureStorageKey = it.pictureStorageKey
+                    basePrice = product.basePrice
+                    pictureStorageKey = product.pictureStorageKey
                 }
-                cart.orderValue = cart.orderValue.add(cartProduct.finalPrice.multiply(BigDecimal(cartProduct.amount)))
-            }, {
+                product
+            }.orElseGet {
                 cart.products.removeIf { product -> product.id == cartProduct.id }
                 cartRepository.save(cart)
-            })
+                null
+            }
         }
 
-        cart.finalOrderValue = cart.orderValue
-        cart.finalDeliveryFee = cart.deliveryFee
-
-        val couponDiscounts = cart.couponApplied?.let {
-            discountService.findMatchingDiscountsByCouponCode(
-                    couponCode = it,
-                    orderValue = cart.orderValue,
-                    deliveryFee = cart.deliveryFee,
-                    customer = customer
-            ).ifEmpty {
-                cart.couponApplied = null
-                cartRepository.save(cart)
-                throw error("Invalid coupon")
-            }
-        } ?: listOf()
-
-        val underlyingDiscounts = discountService.findMatchingUnderlyingDiscounts(
+        val a = discountRepository.findAllAvailableDiscounts(
                 customer = customer,
                 orderValue = cart.orderValue,
-                deliveryFee = cart.deliveryFee
+                deliveryFee = cart.deliveryFee,
+                couponCode = cart.couponApplied
         )
+        a
+        // Tries to apply any available discount to order and delivery fee
+        discountRepository.findAllAvailableDiscounts(
+                customer = customer,
+                orderValue = cart.orderValue,
+                deliveryFee = cart.deliveryFee,
+                couponCode = cart.couponApplied
+        ).forEach { discount ->
+            val validProducts = when (discount) {
+                is OrderDiscount -> discount.validProducts
+                is DeliveryFeeDiscount -> discount.validProducts
+                else -> null
+            }
 
-        val discounts = underlyingDiscounts.union(couponDiscounts)
-
-        discounts.filter { it.isProductDiscount }.forEach { discount ->
-            cart.products.find { it.id == discount.productId }
-                    ?.apply {
-                        val finalValue = if (discount.discountType == DiscountType.AMOUNT_OFF) basePrice.subtract(discount.discount)
-                        else basePrice.subtract(basePrice.multiply(discount.discount))
-
-                        if (finalValue.compareTo(finalPrice) == -1) {
-                            val difference = finalPrice.subtract(finalValue).multiply(BigDecimal(amount))
-                            cart.orderValue = cart.orderValue.subtract(difference)
-                            cart.finalOrderValue = cart.finalOrderValue.subtract(difference)
-
-                            this.discount = discount.discount
-                            discountApplied = true
-                            discountId = discount.id
-                            discountType = discount.discountType
-                            discountSource = discount.campaign.description
-                            finalPrice = finalValue
-                        }
-                    }
-        }
-
-        discounts.filter { !it.isProductDiscount }.forEach { discount ->
-            if (discount.isOrderDiscount) {
-                cart.apply {
-                    val saved = if (discount.discountType === DiscountType.AMOUNT_OFF) discount.discount
-                    else discount.maxOrderDiscountValue?.let {
-                        val discountAmount = orderValue.multiply(discount.discount)
-                        if (discountAmount.compareTo(it) == -1) discountAmount
-                        else discount.maxOrderDiscountValue
-                    } ?: orderValue.multiply(discount.discount)
-
-                    val finalValue = orderValue.subtract(saved)
-
-                    if (finalValue.compareTo(finalOrderValue) == -1) {
-                        orderDiscount = discount.discount
-                        orderDiscountApplied = true
-                        orderDiscountId = discount.id
-                        orderDiscountType = discount.discountType
-                        orderValueSaved = saved
-                        orderDiscountSource = discount.campaign.description
-                        finalOrderValue = finalValue
-                    }
-                }
-            } else {
-                cart.apply {
-                    deliveryFee?.let { deliveryFee ->
-                        val finalValue = if (discount.discountType == DiscountType.AMOUNT_OFF) deliveryFee.subtract(discount.discount)
-                        else deliveryFee.subtract(deliveryFee.multiply(discount.discount))
-
-                        if (finalValue.compareTo(finalOrderValue) == -1) {
-                            deliveryFeeDiscount = discount.discount
-                            deliveryFeeDiscountApplied = true
-                            deliveryFeeDiscountId = discount.id
-                            deliveryFeeDiscountType = discount.discountType
-                            deliveryFeeDiscountSource = discount.campaign.description
-                            finalDeliveryFee = finalValue
-                        }
+            if (validProducts == null || validProducts.isEmpty() ||
+                    (validProducts.containsAll(products) && products.containsAll(validProducts))) {
+                when (discount) {
+                    is OrderDiscount -> cart.orderDiscount = discount
+                    is DeliveryFeeDiscount -> cart.deliveryFeeDiscount = discount
+                    is ProductDiscount -> cart.products.find { cartProduct -> cartProduct.id == discount.product.id }?.apply {
+                        this.discount = discount
                     }
                 }
             }
         }
-
-        cart.finalValue = cart.finalOrderValue.add(cart.finalDeliveryFee ?: BigDecimal.ZERO)
 
         val parameters = systemParameters.getParameters()
 
         cart.orderingAvailable = (parameters.minOrderValue.compareTo(cart.finalOrderValue) <= 0) &&
+                cart.finalValue != null &&
                 cart.deliveryAddress != null &&
                 cart.deliveryFee != null
-
 
         return cart
     }

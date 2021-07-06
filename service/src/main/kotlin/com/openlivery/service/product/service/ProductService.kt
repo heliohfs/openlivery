@@ -1,7 +1,6 @@
 package com.openlivery.service.product.service
 
 import com.openlivery.service.product.domain.entity.Brand
-import com.openlivery.service.product.domain.entity.CatalogProduct
 import com.openlivery.service.product.domain.entity.Category
 import com.openlivery.service.product.domain.entity.Product
 import com.openlivery.service.product.domain.input.InsertBrandInput
@@ -9,7 +8,6 @@ import com.openlivery.service.product.domain.input.InsertProductInput
 import com.openlivery.service.product.domain.input.UpdateBrandInput
 import com.openlivery.service.product.domain.input.UpdateProductInput
 import com.openlivery.service.product.repository.BrandRepository
-import com.openlivery.service.product.repository.CatalogProductRepository
 import com.openlivery.service.product.repository.CategoryRepository
 import com.openlivery.service.product.repository.ProductRepository
 import org.springframework.stereotype.Service
@@ -23,7 +21,6 @@ class ProductService(
         private val productRepository: ProductRepository,
         private val brandRepository: BrandRepository,
         private val categoryRepository: CategoryRepository,
-        private val catalogProductRepository: CatalogProductRepository
 ) {
 
     fun insertProduct(input: InsertProductInput) =
@@ -95,26 +92,22 @@ class ProductService(
 
     fun deleteBrand(brandId: Long) = brandRepository.deleteById(brandId)
 
-    fun findAllProducts() = productRepository.findAll()
+    fun findAllProducts(): List<Product> = productRepository.findAll()
 
-    fun findProductsByCategoryId(categoryId: Long) = productRepository.findByCategoriesId(categoryId)
+    fun findProductsByCategoryId(categoryId: Long): List<Product> = productRepository.findByCategoriesId(categoryId)
 
-    fun findAllBrands() = brandRepository.findAll()
+    fun findAllBrands(): List<Brand> = brandRepository.findAll()
 
-    fun findBrandByProductId(productId: Long) = brandRepository.findByProductsId(productId)
+    fun findBrandByProductId(productId: Long): Optional<Brand> = brandRepository.findByProductsId(productId)
 
-    fun findCategoriesByProductId(productId: Long) = categoryRepository.findByProductsId(productId)
+    fun findCategoriesByProductId(productId: Long): List<Category> = categoryRepository.findByProductsId(productId)
 
-    fun findAllCategories() = categoryRepository.findAll()
-
-    fun findAllCatalogProducts() = catalogProductRepository.findAll()
+    fun findAllCategories(): List<Category> = categoryRepository.findAll()
 
     fun findProductById(id: Long) = productRepository.findById(id)
 
     fun findCategoryById(id: Long) = categoryRepository.findById(id)
 
     fun findBrandById(id: Long) = brandRepository.findById(id)
-
-    fun findCatalogProductById(id: Long) = catalogProductRepository.findById(id)
 
 }

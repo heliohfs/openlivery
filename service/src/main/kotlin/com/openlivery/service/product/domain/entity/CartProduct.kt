@@ -1,12 +1,10 @@
 package com.openlivery.service.product.domain.entity
 
-import com.openlivery.service.product.domain.enums.DiscountType
 import java.io.Serializable
 import java.math.BigDecimal
 
 class CartProduct(
         val id: Long,
-
         var amount: Int
 ) : Serializable {
 
@@ -14,25 +12,23 @@ class CartProduct(
     var basePrice: BigDecimal = BigDecimal.ZERO
 
     @Transient
-    var finalPrice: BigDecimal = BigDecimal.ZERO
-
-    @Transient
-    var discountSource: String? = null
-
-    @Transient
-    var discountApplied: Boolean = false
-
-    @Transient
-    var discountId: Long? = null
-
-    @Transient
-    var discountType: DiscountType? = null
-
-    @Transient
-    var discount: BigDecimal? = null
+    var discount: ProductDiscount? = null
+        set(discount) {
+            field = discount?.let {
+                val discountPrice = it.applyTo(basePrice)
+                when {
+                    field == null -> it
+                    discountPrice.compareTo(finalPrice) == -1 -> it
+                    else -> field
+                }
+            }
+        }
 
     @Transient
     var pictureStorageKey: String? = null
+
+    val finalPrice: BigDecimal
+        get() = discount?.applyTo(basePrice) ?: basePrice
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

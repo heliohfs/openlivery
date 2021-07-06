@@ -1,7 +1,6 @@
 package com.openlivery.service.product.domain.model
 
 import com.openlivery.service.product.domain.entity.CartProduct
-import com.openlivery.service.product.domain.enums.DiscountAccess
 import com.openlivery.service.product.domain.enums.DiscountType
 import java.math.BigDecimal
 
@@ -24,10 +23,10 @@ class CartProductModel private constructor(
                     basePrice = cartProduct.basePrice,
                     finalPrice = cartProduct.finalPrice,
                     amount = cartProduct.amount,
-                    discountApplied = cartProduct.discountApplied,
-                    discountSource = cartProduct.discountSource,
-                    discountType = cartProduct.discountType,
-                    discount = cartProduct.discount,
+                    discountApplied = cartProduct.discount != null,
+                    discountSource = cartProduct.discount?.campaign?.description,
+                    discountType = cartProduct.discount?.kind,
+                    discount = cartProduct.discount?.discount,
                     pictureStorageKey = cartProduct.pictureStorageKey
             )
         }
