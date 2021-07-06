@@ -120,13 +120,6 @@ class CartService(
             }
         }
 
-        val a = discountRepository.findAllAvailableDiscounts(
-                customer = customer,
-                orderValue = cart.orderValue,
-                deliveryFee = cart.deliveryFee,
-                couponCode = cart.couponApplied
-        )
-        a
         // Tries to apply any available discount to order and delivery fee
         discountRepository.findAllAvailableDiscounts(
                 customer = customer,
